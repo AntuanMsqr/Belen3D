@@ -1,0 +1,27 @@
+# --- Unity ---
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+
+# Cache de paquetes
+[Pp]ackages/com.unity.ide.rider/
+[Pp]ackageCache/
+
+# IDEs
+.vs/
+.vscode/
+*.csproj
+*.sln
+*.user
+*.unityproj
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# No subir zips grandes (ajusta a lo que quieras)
+*.zip
