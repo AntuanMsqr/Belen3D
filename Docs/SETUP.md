@@ -76,7 +76,14 @@ Performance Notes
 - Keep volumetrics/particles modest and localized.
 
 Integrating OpenSeeFace (suggested)
+
+OpenSeeFace (recomendado para escenas de muestra)
+- Las escenas incluidas están configuradas para usar OpenSeeFace (componente `OpenSee` + fuentes `OpenSee*`).
+- Ejecuta el tracker desde la raíz del repo para enviar datos a 127.0.0.1:11573:
+  - `.
+Tools\\OpenSeeFace\\Binary\\facetracker.exe -c 0 -v 3 -P 1`
+- Para listar cámaras primero: `.
+Tools\\OpenSeeFace\\Binary\\facetracker.exe -l 1`
 - Run OpenSeeFace’s facetracker and output head translation/rotation.
 - Convert to JSON/CSV above (or adapt the receiver) and send via UDP to port 11573.
 - Tune smoothing (`HeadPoseExponentialFilter.positionAlpha/rotationAlpha`) for stability.
-
