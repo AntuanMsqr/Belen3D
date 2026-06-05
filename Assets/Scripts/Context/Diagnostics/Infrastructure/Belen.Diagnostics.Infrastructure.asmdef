@@ -1,0 +1,19 @@
+{
+    "name": "Belen.Diagnostics.Infrastructure",
+    "rootNamespace": "Belen.Diagnostics.Infrastructure",
+    "references": [
+        "Belen.HeadTracking.Domain",
+        "Belen.HeadTracking.Application",
+        "Belen.HeadTracking.Infrastructure",
+        "Unity.InputSystem"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

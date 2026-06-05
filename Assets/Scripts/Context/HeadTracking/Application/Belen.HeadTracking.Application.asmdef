@@ -1,0 +1,16 @@
+{
+    "name": "Belen.HeadTracking.Application",
+    "rootNamespace": "Belen.HeadTracking.Application",
+    "references": [
+        "Belen.HeadTracking.Domain"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

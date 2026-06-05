@@ -1,0 +1,5 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:VisualElement name="prompt-root" class="prompt-root">
+        <ui:Label name="prompt-label" class="prompt-label" text="Muévete frente a la pantalla&#10;para descubrir el belén" />
+    </ui:VisualElement>
+</ui:UXML>

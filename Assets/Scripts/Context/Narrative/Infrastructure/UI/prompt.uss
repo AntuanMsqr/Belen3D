@@ -1,0 +1,17 @@
+.prompt-root {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.35);
+}
+
+.prompt-label {
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 36px;
+    -unity-text-align: middle-center;
+    white-space: normal;
+}

@@ -1,0 +1,16 @@
+{
+    "name": "Belen.Presentation.Application",
+    "rootNamespace": "Belen.Presentation.Application",
+    "references": [
+        "Belen.Presentation.Domain"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

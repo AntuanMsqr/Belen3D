@@ -1,0 +1,15 @@
+.overlay-root {
+    position: absolute;
+    left: 8px;
+    top: 8px;
+    padding: 6px 10px;
+    background-color: rgba(0, 0, 0, 0.55);
+    border-radius: 4px;
+}
+
+.overlay-label {
+    color: rgb(120, 255, 140);
+    font-size: 14px;
+    -unity-font-style: bold;
+    white-space: normal;
+}

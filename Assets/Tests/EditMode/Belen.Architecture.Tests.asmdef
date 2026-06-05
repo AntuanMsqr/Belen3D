@@ -1,0 +1,29 @@
+{
+    "name": "Belen.Architecture.Tests",
+    "rootNamespace": "Belen.Architecture.Tests",
+    "references": [
+        "Belen.HeadTracking.Domain",
+        "Belen.HeadTracking.Application",
+        "Belen.Presentation.Domain",
+        "Belen.Presentation.Application",
+        "Belen.Narrative.Domain",
+        "Belen.Narrative.Application",
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

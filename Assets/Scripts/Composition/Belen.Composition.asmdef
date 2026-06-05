@@ -1,0 +1,23 @@
+{
+    "name": "Belen.Composition",
+    "rootNamespace": "Belen.Composition",
+    "references": [
+        "Belen.HeadTracking.Domain",
+        "Belen.HeadTracking.Application",
+        "Belen.HeadTracking.Infrastructure",
+        "Belen.Presentation.Domain",
+        "Belen.Presentation.Application",
+        "Belen.Presentation.Infrastructure",
+        "Belen.Diagnostics.Infrastructure",
+        "OpenSee"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

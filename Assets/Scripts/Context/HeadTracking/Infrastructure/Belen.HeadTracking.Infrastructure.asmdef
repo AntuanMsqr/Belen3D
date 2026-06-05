@@ -1,0 +1,19 @@
+{
+    "name": "Belen.HeadTracking.Infrastructure",
+    "rootNamespace": "Belen.HeadTracking.Infrastructure",
+    "references": [
+        "Belen.HeadTracking.Domain",
+        "Belen.HeadTracking.Application",
+        "OpenSee",
+        "Unity.InputSystem"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

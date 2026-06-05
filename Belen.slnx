@@ -1,4 +1,18 @@
 ﻿<Solution>
-  <Project Path="Assembly-CSharp.csproj" />
+  <Project Path="Belen.Presentation.Domain.csproj" />
+  <Project Path="Belen.Narrative.Infrastructure.csproj" />
+  <Project Path="Belen.Diagnostics.Infrastructure.csproj" />
+  <Project Path="Belen.HeadTracking.Infrastructure.csproj" />
+  <Project Path="Belen.HeadTracking.Domain.csproj" />
   <Project Path="Assembly-CSharp-Editor.csproj" />
+  <Project Path="Belen.HeadTracking.Application.csproj" />
+  <Project Path="Belen.Architecture.Tests.csproj" />
+  <Project Path="Belen.Narrative.Domain.csproj" />
+  <Project Path="Belen.Presentation.Infrastructure.csproj" />
+  <Project Path="OpenSee.csproj" />
+  <Project Path="Assembly-CSharp.csproj" />
+  <Project Path="Belen.Presentation.Application.csproj" />
+  <Project Path="Belen.Composition.csproj" />
+  <Project Path="Belen.Composition.Editor.csproj" />
+  <Project Path="Belen.Narrative.Application.csproj" />
 </Solution>
