@@ -17,71 +17,76 @@ namespace Hcp.Presentation.Infrastructure
         // Layer for the editor visuals (cube + markers) so the preview camera can exclude them.
         public int visualLayer = 0;
 
-        private SpatialLayoutService _service;
-        private Transform _screenCenter;
-        private OffAxisCameraView _offAxis;
-        private Transform _headPivot;
+        private SpatialLayoutService service;
+        private Transform screenCenter;
+        private OffAxisCameraView offAxis;
+        private Transform headPivot;
 
-        private Transform _monitor;
-        private Transform _userMarker;
-        private readonly List<Transform> _cameraMarkers = new List<Transform>();
+        private Transform monitor;
+        private Transform userMarker;
+        private OffAxisFrameGizmo frameGizmo;
+        private readonly List<Transform> cameraMarkers = new List<Transform>();
 
-        public Transform ScreenCenter => _screenCenter;
+        public Transform ScreenCenter => screenCenter;
 
         public void Initialize(SpatialLayoutService service, Transform screenCenter,
                                OffAxisCameraView offAxis, Transform headPivot)
         {
-            _service = service;
-            _screenCenter = screenCenter;
-            _offAxis = offAxis;
-            _headPivot = headPivot;
+            this.service = service;
+            this.screenCenter = screenCenter;
+            this.offAxis = offAxis;
+            this.headPivot = headPivot;
 
             EnsureVisuals();
-            if (_service != null)
+            if (this.service != null)
             {
-                _service.LayoutChanged += Apply;
+                this.service.LayoutChanged += Apply;
                 Apply();
             }
         }
 
         private void OnDestroy()
         {
-            if (_service != null) _service.LayoutChanged -= Apply;
+            if (service != null) service.LayoutChanged -= Apply;
         }
 
         private void EnsureVisuals()
         {
-            if (_monitor == null)
+            if (monitor == null)
             {
-                _monitor = MakePrimitive(PrimitiveType.Cube, "MonitorProxy", new Color(0.15f, 0.15f, 0.18f));
-                if (_screenCenter != null) _monitor.SetParent(_screenCenter, false);
-                Tag(_monitor, SpatialKind.Monitor, 0);
+                monitor = MakePrimitive(PrimitiveType.Cube, "MonitorProxy", new Color(0.15f, 0.15f, 0.18f));
+                if (screenCenter != null) monitor.SetParent(screenCenter, false);
+                Tag(monitor, SpatialKind.Monitor, 0);
             }
-            if (_userMarker == null)
+            if (userMarker == null)
             {
-                _userMarker = MakePrimitive(PrimitiveType.Sphere, "UserMarker", new Color(0.2f, 0.8f, 1f));
-                Tag(_userMarker, SpatialKind.User, 0);
+                userMarker = MakePrimitive(PrimitiveType.Sphere, "UserMarker", new Color(0.2f, 0.8f, 1f));
+                Tag(userMarker, SpatialKind.User, 0);
             }
+            // "Ventana" (HCP window) Scene-view gizmo: screen rectangle + neutral eye + frustum
+            // + framed region. Drawn at the screen center; synced with the layout in Apply().
+            if (frameGizmo == null && screenCenter != null)
+                frameGizmo = screenCenter.gameObject.AddComponent<OffAxisFrameGizmo>();
         }
 
         private void Apply()
         {
-            if (_service == null) return;
-            var layout = _service.Current;
+            if (service == null) return;
+            var layout = service.Current;
 
             // Monitor pose -> ScreenCenter (the off-axis screen plane origin).
-            if (_screenCenter != null)
-                _screenCenter.SetPositionAndRotation(layout.monitorPosition, Quaternion.Euler(layout.monitorEuler));
+            if (screenCenter != null)
+                screenCenter.SetPositionAndRotation(layout.monitorPosition, Quaternion.Euler(layout.monitorEuler));
 
             // Flattened cube sized to the physical monitor (child of ScreenCenter).
-            if (_monitor != null)
-                _monitor.localScale = new Vector3(layout.monitorWidth, layout.monitorHeight, MonitorThickness);
+            if (monitor != null)
+                monitor.localScale = new Vector3(layout.monitorWidth, layout.monitorHeight, MonitorThickness);
 
             // Push physical size into the off-axis camera (it reads these each LateUpdate).
-            if (_offAxis != null)
+            if (offAxis != null)
             {
-                _offAxis.screenWidth = layout.monitorWidth;
-                _offAxis.screenHeight = layout.monitorHeight;
+                offAxis.screenWidth = layout.monitorWidth;
+                offAxis.screenHeight = layout.monitorHeight;
             }
 
             // Camera markers (monitor-relative). Rebuild only when the count changes.
@@ -89,19 +94,27 @@ namespace Hcp.Presentation.Infrastructure
             for (int i = 0; i < layout.cameras.Count; i++)
             {
                 var cam = layout.cameras[i];
-                _cameraMarkers[i].position = ToWorld(cam.position);
-                _cameraMarkers[i].rotation = Quaternion.Euler(layout.monitorEuler) * Quaternion.Euler(cam.euler);
-                _cameraMarkers[i].localScale = Vector3.one * (i == layout.activeCamera ? 0.05f : 0.035f);
+                cameraMarkers[i].position = ToWorld(cam.position);
+                cameraMarkers[i].rotation = Quaternion.Euler(layout.monitorEuler) * Quaternion.Euler(cam.euler);
+                cameraMarkers[i].localScale = Vector3.one * (i == layout.activeCamera ? 0.05f : 0.035f);
             }
 
             // User reference marker + best-effort neutral viewpoint (head/eye pivot).
-            if (_userMarker != null)
+            if (userMarker != null)
             {
-                _userMarker.position = ToWorld(layout.userReferencePosition);
-                _userMarker.localScale = Vector3.one * 0.04f;
+                userMarker.position = ToWorld(layout.userReferencePosition);
+                userMarker.localScale = Vector3.one * 0.1f;
             }
-            if (_headPivot != null)
-                _headPivot.position = ToWorld(layout.userReferencePosition);
+            if (headPivot != null)
+                headPivot.position = ToWorld(layout.userReferencePosition);
+
+            // Keep the "Ventana" gizmo in sync (screen-center local space == monitor space).
+            if (frameGizmo != null)
+            {
+                frameGizmo.screenWidth = layout.monitorWidth;
+                frameGizmo.screenHeight = layout.monitorHeight;
+                frameGizmo.eyeLocalPosition = layout.userReferencePosition;
+            }
         }
 
         // --- Writeback used by RuntimeGizmoView -------------------------------------
@@ -110,49 +123,49 @@ namespace Hcp.Presentation.Infrastructure
         // back to monitor-relative space).
         public void PushWorldTransform(SpatialTarget target, Vector3 worldPos, Quaternion worldRot)
         {
-            if (_service == null || target == null) return;
+            if (service == null || target == null) return;
             switch (target.kind)
             {
                 case SpatialKind.Monitor:
-                    _service.SetMonitorPosition(worldPos);
-                    _service.SetMonitorEuler(worldRot.eulerAngles);
+                    service.SetMonitorPosition(worldPos);
+                    service.SetMonitorEuler(worldRot.eulerAngles);
                     break;
                 case SpatialKind.Camera:
                 {
-                    var localPos = _screenCenter.InverseTransformPoint(worldPos);
-                    var localEuler = (Quaternion.Inverse(_screenCenter.rotation) * worldRot).eulerAngles;
-                    _service.SetCameraOffset(target.index, localPos, localEuler);
+                    var localPos = screenCenter.InverseTransformPoint(worldPos);
+                    var localEuler = (Quaternion.Inverse(screenCenter.rotation) * worldRot).eulerAngles;
+                    service.SetCameraOffset(target.index, localPos, localEuler);
                     break;
                 }
                 case SpatialKind.User:
                 {
-                    var localPos = _screenCenter.InverseTransformPoint(worldPos);
-                    _service.SetUserReference(localPos, _service.Current.userReferenceDistance);
+                    var localPos = screenCenter.InverseTransformPoint(worldPos);
+                    service.SetUserReference(localPos, service.Current.userReferenceDistance);
                     break;
                 }
             }
         }
 
-        public void PushMonitorScale(float width, float height) => _service?.SetMonitorSize(width, height);
+        public void PushMonitorScale(float width, float height) => service?.SetMonitorSize(width, height);
 
         private Vector3 ToWorld(Vector3 monitorLocal)
-            => _screenCenter != null ? _screenCenter.TransformPoint(monitorLocal)
-                                     : _service.Current.monitorPosition + Quaternion.Euler(_service.Current.monitorEuler) * monitorLocal;
+            => screenCenter != null ? screenCenter.TransformPoint(monitorLocal)
+                                     : service.Current.monitorPosition + Quaternion.Euler(service.Current.monitorEuler) * monitorLocal;
 
         private void SyncCameraMarkers(int count)
         {
-            while (_cameraMarkers.Count < count)
+            while (cameraMarkers.Count < count)
             {
-                int idx = _cameraMarkers.Count;
+                int idx = cameraMarkers.Count;
                 var m = MakePrimitive(PrimitiveType.Sphere, $"CameraMarker_{idx}", new Color(1f, 0.7f, 0.2f));
                 Tag(m, SpatialKind.Camera, idx);
-                _cameraMarkers.Add(m);
+                cameraMarkers.Add(m);
             }
-            while (_cameraMarkers.Count > count)
+            while (cameraMarkers.Count > count)
             {
-                int last = _cameraMarkers.Count - 1;
-                if (_cameraMarkers[last] != null) Destroy(_cameraMarkers[last].gameObject);
-                _cameraMarkers.RemoveAt(last);
+                int last = cameraMarkers.Count - 1;
+                if (cameraMarkers[last] != null) Destroy(cameraMarkers[last].gameObject);
+                cameraMarkers.RemoveAt(last);
             }
         }
 

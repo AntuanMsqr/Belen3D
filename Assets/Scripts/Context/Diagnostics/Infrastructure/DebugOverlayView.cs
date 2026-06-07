@@ -12,55 +12,55 @@ namespace Hcp.Diagnostics.Infrastructure
     [RequireComponent(typeof(UIDocument))]
     public class DebugOverlayView : MonoBehaviour
     {
-        private HeadTrackingController _controller;
-        private Transform _eye;
-        private Transform _screen;
+        private HeadTrackingController controller;
+        private Transform eye;
+        private Transform screen;
 
-        private UIDocument _doc;
-        private Label _label;
-        private float _fps;
+        private UIDocument doc;
+        private Label label;
+        private float fps;
 
         public void Initialize(HeadTrackingController controller, Transform eye, Transform screen)
         {
-            _controller = controller;
-            _eye = eye;
-            _screen = screen;
+            this.controller = controller;
+            this.eye = eye;
+            this.screen = screen;
         }
 
         private void OnEnable()
         {
-            _doc = GetComponent<UIDocument>();
-            var root = _doc != null ? _doc.rootVisualElement : null;
-            _label = root?.Q<Label>("overlay-label");
+            doc = GetComponent<UIDocument>();
+            var root = doc != null ? doc.rootVisualElement : null;
+            label = root?.Q<Label>("overlay-label");
         }
 
         private void Update()
         {
 #if ENABLE_INPUT_SYSTEM
             var k = Keyboard.current;
-            if (k != null && k.f1Key.wasPressedThisFrame && _doc != null)
+            if (k != null && k.f1Key.wasPressedThisFrame && doc != null)
             {
-                var root = _doc.rootVisualElement;
+                var root = doc.rootVisualElement;
                 root.style.display = root.style.display == DisplayStyle.None ? DisplayStyle.Flex : DisplayStyle.None;
             }
 #endif
-            if (_label == null && _doc != null)
-                _label = _doc.rootVisualElement?.Q<Label>("overlay-label");
-            if (_label == null || _controller == null) return;
+            if (label == null && doc != null)
+                label = doc.rootVisualElement?.Q<Label>("overlay-label");
+            if (label == null || controller == null) return;
 
             float dt = Time.unscaledDeltaTime;
-            _fps = Mathf.Lerp(_fps, 1f / Mathf.Max(1e-4f, dt), 0.1f);
+            fps = Mathf.Lerp(fps, 1f / Mathf.Max(1e-4f, dt), 0.1f);
 
-            var p = _controller.LastFilteredPosition;
-            float dist = (_eye != null && _screen != null)
-                ? Vector3.Dot(_eye.position - _screen.position, _screen.forward)
+            var p = controller.LastFilteredPosition;
+            float dist = (eye != null && screen != null)
+                ? Vector3.Dot(eye.position - screen.position, screen.forward)
                 : 0f;
 
-            _label.text =
+            label.text =
                 $"head  {p.x:F2}, {p.y:F2}, {p.z:F2}\n" +
                 $"dist  {dist:F2} m\n" +
-                $"mode  {_controller.Calibration.motionMode}\n" +
-                $"fps   {_fps:F0}";
+                $"mode  {controller.Calibration.motionMode}\n" +
+                $"fps   {fps:F0}";
         }
     }
 }

@@ -7,13 +7,13 @@ namespace Hcp.HeadTracking.Application
     // Owns calibration state. Plain class (NOT a MonoBehaviour) — ticked by an Infrastructure View.
     public sealed class HeadTrackingController
     {
-        private readonly IHeadPoseSource _source;
-        private readonly HeadPoseProcessingService _processing;
-        private readonly CameraMappingService _mapping;
-        private readonly ICalibrationStore _store;
+        private readonly IHeadPoseSource source;
+        private readonly HeadPoseProcessingService processing;
+        private readonly CameraMappingService mapping;
+        private readonly ICalibrationStore store;
 
-        private CalibrationData _cal;
-        private bool _started;
+        private CalibrationData cal;
+        private bool started;
 
         public Vector3 LastFilteredPosition { get; private set; }
         public Vector3 LastFilteredEuler { get; private set; }
@@ -24,52 +24,52 @@ namespace Hcp.HeadTracking.Application
                                       ICalibrationStore store,
                                       CalibrationData seed)
         {
-            _source = source;
-            _processing = processing;
-            _mapping = mapping;
-            _store = store;
-            _cal = seed;
+            this.source = source;
+            this.processing = processing;
+            this.mapping = mapping;
+            this.store = store;
+            cal = seed;
         }
 
-        public CalibrationData Calibration => _cal;
+        public CalibrationData Calibration => cal;
 
-        public void SetCalibration(in CalibrationData cal) => _cal = cal;
+        public void SetCalibration(in CalibrationData cal) => this.cal = cal;
 
         public void Start()
         {
-            if (_started) return;
-            _started = true;
-            _source.Start();
-            _store.TryLoad(ref _cal); // overlay persisted values onto the config seed
-            _processing.Reset();
-            _mapping.ResetOrbit(_cal);
+            if (started) return;
+            started = true;
+            source.Start();
+            store.TryLoad(ref cal); // overlay persisted values onto the config seed
+            processing.Reset();
+            mapping.ResetOrbit(cal);
         }
 
         public void Stop()
         {
-            if (!_started) return;
-            _started = false;
-            _source.Stop();
+            if (!started) return;
+            started = false;
+            source.Stop();
         }
 
         // Returns true when a fresh pose produced a new CameraTarget.
         public bool TryTick(float deltaTime, out CameraTarget target)
         {
             target = default;
-            if (!_source.TryGetLatest(out var raw)) return false;
+            if (!source.TryGetLatest(out var raw)) return false;
 
-            var filtered = _processing.Process(raw, ref _cal);
+            var filtered = processing.Process(raw, ref cal);
             LastFilteredPosition = filtered.position;
             LastFilteredEuler = filtered.eulerDegrees;
 
-            target = _mapping.Map(filtered, _cal, deltaTime);
+            target = mapping.Map(filtered, cal, deltaTime);
             return true;
         }
 
-        public void ResetOrbit() => _mapping.ResetOrbit(_cal);
+        public void ResetOrbit() => mapping.ResetOrbit(cal);
 
-        public void SaveCalibration() => _store.Save(_cal);
+        public void SaveCalibration() => store.Save(cal);
 
-        public void ClearCalibration() => _store.Clear();
+        public void ClearCalibration() => store.Clear();
     }
 }

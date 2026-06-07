@@ -9,29 +9,29 @@ namespace Hcp.Diagnostics.Infrastructure
     {
         public float saveDelay = 3f;
 
-        private HeadTrackingController _controller;
-        private float _elapsed;
-        private bool _savedOnce;
+        private HeadTrackingController controller;
+        private float elapsed;
+        private bool savedOnce;
 
         public void Initialize(HeadTrackingController controller)
         {
-            _controller = controller;
+            this.controller = controller;
         }
 
         private void Update()
         {
-            if (_controller == null || _savedOnce) return;
-            _elapsed += Time.unscaledDeltaTime;
-            if (_elapsed >= saveDelay)
+            if (controller == null || savedOnce) return;
+            elapsed += Time.unscaledDeltaTime;
+            if (elapsed >= saveDelay)
             {
-                _controller.SaveCalibration();
-                _savedOnce = true;
+                controller.SaveCalibration();
+                savedOnce = true;
             }
         }
 
         private void OnApplicationQuit()
         {
-            try { _controller?.SaveCalibration(); } catch { /* ignore */ }
+            try { controller?.SaveCalibration(); } catch { /* ignore */ }
         }
     }
 }

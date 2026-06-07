@@ -2,14 +2,17 @@
     position: absolute;
     left: 8px;
     top: 8px;
-    padding: 6px 10px;
-    background-color: rgba(0, 0, 0, 0.55);
-    border-radius: 4px;
+    padding: 8px 12px;
+    background-color: rgba(18, 20, 26, 0.78);
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
 }
 
 .overlay-label {
-    color: rgb(120, 255, 140);
+    color: rgb(64, 220, 130);
     font-size: 14px;
     -unity-font-style: bold;
+    letter-spacing: 0.3px;
     white-space: normal;
 }

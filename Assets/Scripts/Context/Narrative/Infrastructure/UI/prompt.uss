@@ -6,12 +6,15 @@
     bottom: 0;
     align-items: center;
     justify-content: center;
-    background-color: rgba(0, 0, 0, 0.35);
+    background-color: rgba(8, 9, 12, 0.45);
 }
 
 .prompt-label {
-    color: rgba(255, 255, 255, 0.95);
+    color: rgba(255, 255, 255, 0.96);
     font-size: 36px;
+    padding: 18px 28px;
+    background-color: rgba(18, 20, 26, 0.55);
+    border-radius: 14px;
     -unity-text-align: middle-center;
     white-space: normal;
 }

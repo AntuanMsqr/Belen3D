@@ -5,29 +5,29 @@ namespace Hcp.HeadTracking.Application
     // Filters a raw head pose and updates neutral calibration.
     public sealed class HeadPoseProcessingService
     {
-        private readonly HeadPoseExponentialFilter _filter;
-        private readonly NeutralLearningService _neutral;
+        private readonly HeadPoseExponentialFilter filter;
+        private readonly NeutralLearningService neutral;
 
         public HeadPoseProcessingService(HeadPoseExponentialFilter filter, NeutralLearningService neutral)
         {
-            _filter = filter;
-            _neutral = neutral;
+            this.filter = filter;
+            this.neutral = neutral;
         }
 
         public void Reset()
         {
-            _filter.Reset();
-            _neutral.Reset();
+            filter.Reset();
+            neutral.Reset();
         }
 
         public HeadPose Process(in HeadPose raw, ref CalibrationData cal)
         {
             // Keep the filter in sync with persisted/edited alphas.
-            _filter.positionAlpha = cal.positionAlpha;
-            _filter.rotationAlpha = cal.rotationAlpha;
+            this.filter.positionAlpha = cal.positionAlpha;
+            this.filter.rotationAlpha = cal.rotationAlpha;
 
-            var filtered = _filter.Filter(raw);
-            _neutral.Process(filtered, ref cal);
+            var filtered = this.filter.Filter(raw);
+            neutral.Process(filtered, ref cal);
             return filtered;
         }
     }

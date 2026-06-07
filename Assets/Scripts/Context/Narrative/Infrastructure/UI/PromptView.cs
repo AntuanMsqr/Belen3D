@@ -12,39 +12,39 @@ namespace Hcp.Narrative.Infrastructure
     {
         public float fadeSpeed = 4f;
 
-        private UIDocument _doc;
-        private VisualElement _root;
-        private float _alpha = 1f;
-        private bool _present;
+        private UIDocument doc;
+        private VisualElement root;
+        private float alpha = 1f;
+        private bool present;
 
         public void Initialize(PresenceView presence)
         {
             if (presence == null) return;
             presence.OnPresent += HandlePresent;
             presence.OnAbsent += HandleAbsent;
-            _present = presence.IsPresent;
+            present = presence.IsPresent;
         }
 
-        private void HandlePresent() => _present = true;
-        private void HandleAbsent() => _present = false;
+        private void HandlePresent() => present = true;
+        private void HandleAbsent() => present = false;
 
         private void OnEnable()
         {
-            _doc = GetComponent<UIDocument>();
-            _root = _doc != null ? _doc.rootVisualElement : null;
+            doc = GetComponent<UIDocument>();
+            root = doc != null ? doc.rootVisualElement : null;
         }
 
         private void Update()
         {
-            if (_root == null)
+            if (root == null)
             {
-                if (_doc != null) _root = _doc.rootVisualElement;
-                if (_root == null) return;
+                if (doc != null) root = doc.rootVisualElement;
+                if (root == null) return;
             }
 
-            _alpha = PromptFade.Step(_alpha, _present, fadeSpeed, Time.deltaTime);
-            _root.style.opacity = _alpha;
-            _root.style.display = _alpha > 0.01f ? DisplayStyle.Flex : DisplayStyle.None;
+            alpha = PromptFade.Step(alpha, present, fadeSpeed, Time.deltaTime);
+            root.style.opacity = alpha;
+            root.style.display = alpha > 0.01f ? DisplayStyle.Flex : DisplayStyle.None;
         }
     }
 }

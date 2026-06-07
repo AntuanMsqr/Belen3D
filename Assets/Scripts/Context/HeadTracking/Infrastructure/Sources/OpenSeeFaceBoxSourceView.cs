@@ -31,11 +31,11 @@ namespace Hcp.HeadTracking.Infrastructure
         public bool invertX = false;
         public bool invertY = false;
 
-        private float _zSmoothed;
-        private float _zVel;
-        private float _lastFacePixels;
-        private float _sumFace; private int _countFace; private double _t0;
-        private HeadPose _latest;
+        private float zSmoothed;
+        private float zVel;
+        private float lastFacePixels;
+        private float sumFace; private int countFace; private double t0;
+        private HeadPose latest;
 
         public event Action<HeadPose> OnPose;
 
@@ -67,7 +67,7 @@ namespace Hcp.HeadTracking.Infrastructure
             float cx = Mathf.Clamp01(cxPx / camW);
             float cy = Mathf.Clamp01(cyPx / camH);
             float faceN = Mathf.Clamp(Mathf.Max(wPx / camW, hPx / camH), faceSizeClamp01.x, faceSizeClamp01.y);
-            _lastFacePixels = faceN;
+            lastFacePixels = faceN;
 
             float nx = (cx - 0.5f) * (invertX ? -1f : 1f);
             float ny = (cy - 0.5f) * (invertY ? 1f : -1f); // Y up
@@ -76,11 +76,11 @@ namespace Hcp.HeadTracking.Infrastructure
 
             if (autoNeutral && neutralFacePixels <= 0f)
             {
-                if (_countFace == 0) _t0 = Time.realtimeSinceStartupAsDouble;
-                _sumFace += faceN; _countFace++;
-                if (Time.realtimeSinceStartupAsDouble - _t0 >= Mathf.Max(0.1f, autoNeutralDuration))
+                if (countFace == 0) t0 = Time.realtimeSinceStartupAsDouble;
+                sumFace += faceN; countFace++;
+                if (Time.realtimeSinceStartupAsDouble - t0 >= Mathf.Max(0.1f, autoNeutralDuration))
                 {
-                    neutralFacePixels = Mathf.Max(1e-4f, _sumFace / Mathf.Max(1, _countFace));
+                    neutralFacePixels = Mathf.Max(1e-4f, sumFace / Mathf.Max(1, countFace));
                 }
             }
 
@@ -88,28 +88,28 @@ namespace Hcp.HeadTracking.Infrastructure
             {
                 float zFromSize = neutralDepthMeters * (neutralFacePixels / faceN);
                 zFromSize = Mathf.Clamp(zFromSize, zClamp.x, zClamp.y);
-                if (_zSmoothed <= 0f) _zSmoothed = zFromSize;
-                _zSmoothed = Mathf.SmoothDamp(_zSmoothed, zFromSize, ref _zVel, Mathf.Max(0.01f, zSmoothTime));
-                pos.z = Mathf.Lerp(pos.z, _zSmoothed, Mathf.Clamp01(zBlend));
+                if (zSmoothed <= 0f) zSmoothed = zFromSize;
+                zSmoothed = Mathf.SmoothDamp(zSmoothed, zFromSize, ref zVel, Mathf.Max(0.01f, zSmoothTime));
+                pos.z = Mathf.Lerp(pos.z, zSmoothed, Mathf.Clamp01(zBlend));
             }
             else if (use3DZFallback)
             {
                 float z3d = Mathf.Abs(data.translation.z);
                 z3d = Mathf.Clamp(z3d, zClamp.x, zClamp.y);
-                if (_zSmoothed <= 0f) _zSmoothed = z3d;
-                _zSmoothed = Mathf.SmoothDamp(_zSmoothed, z3d, ref _zVel, Mathf.Max(0.01f, zSmoothTime));
-                pos.z = _zSmoothed;
+                if (zSmoothed <= 0f) zSmoothed = z3d;
+                zSmoothed = Mathf.SmoothDamp(zSmoothed, z3d, ref zVel, Mathf.Max(0.01f, zSmoothTime));
+                pos.z = zSmoothed;
             }
 
             var eul = Vector3.zero; // no rotation
             var ts = Time.realtimeSinceStartupAsDouble;
-            _latest = new HeadPose(pos, eul, ts);
-            OnPose?.Invoke(_latest);
+            latest = new HeadPose(pos, eul, ts);
+            OnPose?.Invoke(latest);
         }
 
         public bool TryGetLatest(out HeadPose pose)
         {
-            pose = _latest;
+            pose = latest;
             return true;
         }
 
@@ -118,7 +118,7 @@ namespace Hcp.HeadTracking.Infrastructure
 
         public void CalibrateNeutralFaceSizeFromLast()
         {
-            if (_lastFacePixels > 1f) neutralFacePixels = _lastFacePixels;
+            if (lastFacePixels > 1f) neutralFacePixels = lastFacePixels;
         }
     }
 }

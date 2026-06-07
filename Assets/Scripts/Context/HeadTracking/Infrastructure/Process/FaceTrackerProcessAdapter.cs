@@ -12,19 +12,19 @@ namespace Hcp.HeadTracking.Infrastructure
     // bundled python/onnxruntime/opencv DLLs resolve, and its child processes must be killed too.
     public sealed class FaceTrackerProcessAdapter : ITrackerProcess
     {
-        private readonly string _exePath;
-        private readonly string _workingDir;
-        private readonly string _arguments;
-        private readonly bool _showWindow;
+        private readonly string exePath;
+        private readonly string workingDir;
+        private readonly string arguments;
+        private readonly bool showWindow;
 
-        private Process _proc;
+        private Process proc;
 
         public FaceTrackerProcessAdapter(string exePath, string arguments, bool showWindow, string workingDir = null)
         {
-            _exePath = exePath;
-            _arguments = arguments ?? string.Empty;
-            _showWindow = showWindow;
-            _workingDir = string.IsNullOrEmpty(workingDir)
+            this.exePath = exePath;
+            this.arguments = arguments ?? string.Empty;
+            this.showWindow = showWindow;
+            this.workingDir = string.IsNullOrEmpty(workingDir)
                 ? Path.GetDirectoryName(exePath)
                 : workingDir;
         }
@@ -33,7 +33,7 @@ namespace Hcp.HeadTracking.Infrastructure
         {
             get
             {
-                try { return _proc != null && !_proc.HasExited; }
+                try { return proc != null && !proc.HasExited; }
                 catch { return false; }
             }
         }
@@ -42,9 +42,9 @@ namespace Hcp.HeadTracking.Infrastructure
         {
             if (IsRunning) return;
 
-            if (string.IsNullOrEmpty(_exePath) || !File.Exists(_exePath))
+            if (string.IsNullOrEmpty(exePath) || !File.Exists(exePath))
             {
-                Debug.LogError($"[FaceTrackerProcess] Executable not found: '{_exePath}'. " +
+                Debug.LogError($"[FaceTrackerProcess] Executable not found: '{exePath}'. " +
                                "Set the path on the HeadTrackingConfig asset.");
                 return;
             }
@@ -53,39 +53,39 @@ namespace Hcp.HeadTracking.Infrastructure
             {
                 var psi = new ProcessStartInfo
                 {
-                    FileName = _exePath,
-                    Arguments = _arguments,
-                    WorkingDirectory = _workingDir,
+                    FileName = exePath,
+                    Arguments = arguments,
+                    WorkingDirectory = workingDir,
                     UseShellExecute = false,
-                    CreateNoWindow = !_showWindow
+                    CreateNoWindow = !showWindow
                 };
-                _proc = Process.Start(psi);
-                if (_proc != null)
-                    Debug.Log($"[FaceTrackerProcess] Started '{_exePath}' {_arguments} (pid {_proc.Id})");
+                proc = Process.Start(psi);
+                if (proc != null)
+                    Debug.Log($"[FaceTrackerProcess] Started '{exePath}' {arguments} (pid {proc.Id})");
             }
             catch (Exception e)
             {
-                Debug.LogError($"[FaceTrackerProcess] Failed to start '{_exePath}': {e.Message}");
-                _proc = null;
+                Debug.LogError($"[FaceTrackerProcess] Failed to start '{exePath}': {e.Message}");
+                proc = null;
             }
         }
 
         public void Stop()
         {
-            if (_proc == null) return;
+            if (proc == null) return;
 
             try
             {
-                if (!_proc.HasExited)
+                if (!proc.HasExited)
                 {
                     // PyInstaller spawns children; kill the whole tree to avoid orphans.
                     // taskkill /T is the reliable cross-runtime way on Windows
                     // (Process.Kill(bool) isn't guaranteed under Unity's .NET Standard profile).
-                    TaskkillTree(_proc.Id);
-                    if (!_proc.WaitForExit(1500))
+                    TaskkillTree(proc.Id);
+                    if (!proc.WaitForExit(1500))
                     {
-                        try { _proc.Kill(); } catch { /* ignore */ }
-                        _proc.WaitForExit(1000);
+                        try { proc.Kill(); } catch { /* ignore */ }
+                        proc.WaitForExit(1000);
                     }
                 }
             }
@@ -95,8 +95,8 @@ namespace Hcp.HeadTracking.Infrastructure
             }
             finally
             {
-                try { _proc.Dispose(); } catch { /* ignore */ }
-                _proc = null;
+                try { proc.Dispose(); } catch { /* ignore */ }
+                proc = null;
             }
         }
 

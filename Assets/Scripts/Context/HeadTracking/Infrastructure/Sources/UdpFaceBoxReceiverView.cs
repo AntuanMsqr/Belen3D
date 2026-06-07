@@ -32,13 +32,13 @@ namespace Hcp.HeadTracking.Infrastructure
         public bool invertY = false;
         public bool logPackets = false;
 
-        private UdpClient _client;
-        private Thread _thread;
-        private volatile bool _running;
-        private readonly object _lock = new object();
-        private bool _hasPose;
-        private HeadPose _latest;
-        private float _zSmoothed, _zVel;
+        private UdpClient client;
+        private Thread thread;
+        private volatile bool running;
+        private readonly object gate = new object();
+        private bool hasPose;
+        private HeadPose latest;
+        private float zSmoothed, zVel;
 
         public event Action<HeadPose> OnPose;
 
@@ -47,18 +47,18 @@ namespace Hcp.HeadTracking.Infrastructure
 
         public void Start()
         {
-            if (_running) return;
+            if (running) return;
             try
             {
                 var endpoint = new IPEndPoint(useIPv6 ? IPAddress.IPv6Any : IPAddress.Any, listenPort);
-                _client = useIPv6 ? new UdpClient(AddressFamily.InterNetworkV6) : new UdpClient();
-                _client.ExclusiveAddressUse = false;
-                _client.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-                _client.Client.Bind(endpoint);
+                client = useIPv6 ? new UdpClient(AddressFamily.InterNetworkV6) : new UdpClient();
+                client.ExclusiveAddressUse = false;
+                client.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+                client.Client.Bind(endpoint);
 
-                _running = true;
-                _thread = new Thread(ReceiveLoop) { IsBackground = true, Name = "UdpFaceBoxReceiver" };
-                _thread.Start();
+                running = true;
+                thread = new Thread(ReceiveLoop) { IsBackground = true, Name = "UdpFaceBoxReceiver" };
+                thread.Start();
             }
             catch (Exception e)
             {
@@ -69,38 +69,38 @@ namespace Hcp.HeadTracking.Infrastructure
 
         public void Stop()
         {
-            _running = false;
-            try { _client?.Close(); } catch { }
-            _client = null;
-            try { _thread?.Join(100); } catch { }
-            _thread = null;
+            running = false;
+            try { client?.Close(); } catch { }
+            client = null;
+            try { thread?.Join(100); } catch { }
+            thread = null;
         }
 
         private void ReceiveLoop()
         {
             var remote = new IPEndPoint(IPAddress.Any, 0);
-            while (_running)
+            while (running)
             {
                 try
                 {
-                    var data = _client.Receive(ref remote);
+                    var data = client.Receive(ref remote);
                     if (data == null || data.Length == 0) continue;
                     var text = Encoding.UTF8.GetString(data);
                     if (logPackets) Debug.Log($"[UdpFaceBoxReceiver] {text}");
 
                     if (TryParse(text, out var pose))
                     {
-                        lock (_lock)
+                        lock (gate)
                         {
-                            _latest = pose;
-                            _hasPose = true;
+                            latest = pose;
+                            hasPose = true;
                         }
                         OnPose?.Invoke(pose);
                     }
                 }
                 catch (SocketException)
                 {
-                    if (!_running) break;
+                    if (!running) break;
                 }
                 catch (Exception e)
                 {
@@ -111,11 +111,11 @@ namespace Hcp.HeadTracking.Infrastructure
 
         public bool TryGetLatest(out HeadPose pose)
         {
-            lock (_lock)
+            lock (gate)
             {
-                pose = _latest;
-                var had = _hasPose;
-                _hasPose = false;
+                pose = latest;
+                var had = hasPose;
+                hasPose = false;
                 return had;
             }
         }
@@ -175,9 +175,9 @@ namespace Hcp.HeadTracking.Infrastructure
 
                 float zFromSize = neutralDepthMeters * (neutralSizeNormalized > 1e-4f ? (neutralSizeNormalized / size) : 1f);
                 zFromSize = Mathf.Clamp(zFromSize, zClamp.x, zClamp.y);
-                if (_zSmoothed <= 0f) _zSmoothed = zFromSize;
-                _zSmoothed = Mathf.SmoothDamp(_zSmoothed, zFromSize, ref _zVel, Mathf.Max(0.01f, zSmoothTime));
-                pos.z = _zSmoothed;
+                if (zSmoothed <= 0f) zSmoothed = zFromSize;
+                zSmoothed = Mathf.SmoothDamp(zSmoothed, zFromSize, ref zVel, Mathf.Max(0.01f, zSmoothTime));
+                pos.z = zSmoothed;
 
                 var eul = Vector3.zero; // no rotation ever
                 var ts = Time.realtimeSinceStartupAsDouble;

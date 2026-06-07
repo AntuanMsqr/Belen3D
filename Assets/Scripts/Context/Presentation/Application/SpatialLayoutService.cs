@@ -10,7 +10,7 @@ namespace Hcp.Presentation.Application
     // proxy/off-axis views update live.
     public class SpatialLayoutService
     {
-        private ISpatialLayoutStore _store;
+        private ISpatialLayoutStore store;
 
         public SpatialLayout Current { get; private set; }
         public ScreenPlane CurrentScreenPlane => Current.ToScreenPlane();
@@ -20,18 +20,18 @@ namespace Hcp.Presentation.Application
 
         public SpatialLayoutService(SpatialLayout seed, ISpatialLayoutStore store)
         {
-            _store = store;
+            this.store = store;
             Current = seed ?? SpatialLayout.Defaults();
-            _store?.TryLoad(Current);
+            this.store?.TryLoad(Current);
         }
 
         // Switch to another scene's store + seed (Configurator scene selector). Loads the
         // persisted layout for that scene over the seed and notifies listeners.
         public void Rebind(ISpatialLayoutStore store, SpatialLayout seed)
         {
-            _store = store;
+            this.store = store;
             Current = seed ?? SpatialLayout.Defaults();
-            _store?.TryLoad(Current);
+            this.store?.TryLoad(Current);
             Raise();
         }
 
@@ -95,7 +95,7 @@ namespace Hcp.Presentation.Application
             Raise();
         }
 
-        public void Save() => _store?.Save(Current);
+        public void Save() => store?.Save(Current);
 
         public void ResetToDefaults()
         {

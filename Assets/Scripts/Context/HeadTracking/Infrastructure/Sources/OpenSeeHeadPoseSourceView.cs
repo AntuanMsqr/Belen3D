@@ -27,11 +27,11 @@ namespace Hcp.HeadTracking.Infrastructure
         public Vector2 zClamp = new Vector2(0.2f, 2.5f);
         public float zSmoothTime = 0.12f;
 
-        private float _zSmoothed;
-        private float _zVel;
-        private float _lastFacePixels;
+        private float zSmoothed;
+        private float zVel;
+        private float lastFacePixels;
 
-        private HeadPose _latest;
+        private HeadPose latest;
         public event Action<HeadPose> OnPose;
 
         private void Reset()
@@ -56,36 +56,36 @@ namespace Hcp.HeadTracking.Infrastructure
             if (invertZ) pos.z = -pos.z;
 
             float facePx = MeasureFacePixels(data);
-            _lastFacePixels = facePx;
+            lastFacePixels = facePx;
             if (estimateZFromFaceSize && facePx > 1f)
             {
                 float zFromSize = neutralDepthMeters * (neutralFacePixels > 1f ? (neutralFacePixels / facePx) : 1f);
                 zFromSize = Mathf.Clamp(zFromSize, zClamp.x, zClamp.y);
-                if (_zSmoothed <= 0f) _zSmoothed = zFromSize;
-                _zSmoothed = Mathf.SmoothDamp(_zSmoothed, zFromSize, ref _zVel, Mathf.Max(0.01f, zSmoothTime));
-                pos.z = Mathf.Lerp(pos.z, _zSmoothed, Mathf.Clamp01(zBlend));
+                if (zSmoothed <= 0f) zSmoothed = zFromSize;
+                zSmoothed = Mathf.SmoothDamp(zSmoothed, zFromSize, ref zVel, Mathf.Max(0.01f, zSmoothTime));
+                pos.z = Mathf.Lerp(pos.z, zSmoothed, Mathf.Clamp01(zBlend));
             }
             pos += positionOffset;
             var eul = data.rotation + rotationOffset;
             var ts = Time.realtimeSinceStartupAsDouble;
-            _latest = new HeadPose(pos, eul, ts);
-            OnPose?.Invoke(_latest);
+            latest = new HeadPose(pos, eul, ts);
+            OnPose?.Invoke(latest);
         }
 
         public bool TryGetLatest(out HeadPose pose)
         {
-            pose = _latest;
+            pose = latest;
             return true;
         }
 
         public void Start() { /* no-op */ }
         public void Stop() { /* no-op */ }
 
-        public float GetLastMeasuredFacePixels() => _lastFacePixels;
+        public float GetLastMeasuredFacePixels() => lastFacePixels;
 
         public void CalibrateNeutralFaceSizeFromLast()
         {
-            if (_lastFacePixels > 1f) neutralFacePixels = _lastFacePixels;
+            if (lastFacePixels > 1f) neutralFacePixels = lastFacePixels;
         }
 
         private static float MeasureFacePixels(OpenSee.OpenSee.OpenSeeData data)

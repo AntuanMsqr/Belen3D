@@ -11,13 +11,13 @@ namespace Hcp.Presentation.Infrastructure
     // overlays persisted values onto the config-seeded instance in place.
     public class JsonFileSpatialLayoutStore : ISpatialLayoutStore
     {
-        private readonly string _path;
+        private readonly string path;
 
         // Per-scene layout: file name keyed by scene so each scene has its own config.
         public JsonFileSpatialLayoutStore(string sceneKey = "default")
         {
             string safe = Sanitize(string.IsNullOrWhiteSpace(sceneKey) ? "default" : sceneKey);
-            _path = Path.Combine(UnityEngine.Application.persistentDataPath, $"spatial-layout-{safe}.json");
+            path = Path.Combine(UnityEngine.Application.persistentDataPath, $"spatial-layout-{safe}.json");
         }
 
         private static string Sanitize(string s)
@@ -31,8 +31,8 @@ namespace Hcp.Presentation.Infrastructure
             if (layout == null) return false;
             try
             {
-                if (!File.Exists(_path)) return false;
-                var json = File.ReadAllText(_path);
+                if (!File.Exists(path)) return false;
+                var json = File.ReadAllText(path);
                 if (string.IsNullOrWhiteSpace(json)) return false;
                 JsonUtility.FromJsonOverwrite(json, layout);
                 return true;
@@ -49,7 +49,7 @@ namespace Hcp.Presentation.Infrastructure
             if (layout == null) return;
             try
             {
-                File.WriteAllText(_path, JsonUtility.ToJson(layout, true));
+                File.WriteAllText(path, JsonUtility.ToJson(layout, true));
             }
             catch (Exception e)
             {
@@ -59,7 +59,7 @@ namespace Hcp.Presentation.Infrastructure
 
         public void Clear()
         {
-            try { if (File.Exists(_path)) File.Delete(_path); }
+            try { if (File.Exists(path)) File.Delete(path); }
             catch (Exception e) { Debug.LogWarning($"[SpatialLayout] clear failed: {e.Message}"); }
         }
     }

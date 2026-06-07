@@ -38,9 +38,9 @@ namespace Hcp.Composition
         [Tooltip("Overlay UXML (assigned by HCP > Setup Hex Scene).")]
         public VisualTreeAsset overlayUxml;
 
-        private HeadTrackingController _controller;
-        private ITrackerProcess _tracker;
-        private bool _stopped;
+        private HeadTrackingController controller;
+        private ITrackerProcess tracker;
+        private bool stopped;
 
         // Set by the Configurator while a scene is loaded as visual reference, so that
         // scene's own bootstrap does NOT spin up head tracking / the OpenSee UDP socket
@@ -90,6 +90,32 @@ namespace Hcp.Composition
                                    cam.nearClipPlane, cam.farClipPlane);
             }
 
+            // --- Apply this scene's saved spatial layout (authored in the Configurator) ---
+            // Loaded BEFORE the controller so the head-tracking neutral can be aligned to the
+            // authored user reference -> Play matches the Configurator preview exactly.
+            var seed = spatialConfig != null ? spatialConfig.ToSpatialLayout() : SpatialLayout.Defaults();
+            ISpatialLayoutStore spatialStore = new JsonFileSpatialLayoutStore(SceneManager.GetActiveScene().name);
+            var spatialLayout = new SpatialLayoutService(seed, spatialStore).Current;
+
+            screenCenter.SetPositionAndRotation(spatialLayout.monitorPosition, Quaternion.Euler(spatialLayout.monitorEuler));
+            if (offAxis != null)
+            {
+                offAxis.screenWidth = spatialLayout.monitorWidth;
+                offAxis.screenHeight = spatialLayout.monitorHeight;
+            }
+            // Neutral viewpoint: head pivot at the user reference (monitor-relative).
+            headPivot.position = screenCenter.TransformPoint(spatialLayout.userReferencePosition);
+
+            // "Ventana" (HCP window) Scene-view gizmo: screen rect + neutral eye + frustum.
+            // Mirrors the Configurator so the authored window is visible while exploring.
+            if (enableOffAxis)
+            {
+                var frame = screenCenter.gameObject.AddComponent<OffAxisFrameGizmo>();
+                frame.screenWidth = spatialLayout.monitorWidth;
+                frame.screenHeight = spatialLayout.monitorHeight;
+                frame.eyeLocalPosition = spatialLayout.userReferencePosition;
+            }
+
             // --- OpenSee UDP receiver (only for OpenSee* sources) ---
             // Reuse an existing receiver to avoid a second bind on the same UDP port.
             OpenSee.OpenSee openSee = null;
@@ -121,19 +147,28 @@ namespace Hcp.Composition
             var processing = new HeadPoseProcessingService(filter, neutral);
             var mapping = new CameraMappingService();
             ICalibrationStore store = new PlayerPrefsCalibrationStore();
-            _controller = new HeadTrackingController(source, processing, mapping, store, cfg.ToCalibrationData());
+            controller = new HeadTrackingController(source, processing, mapping, store, cfg.ToCalibrationData());
 
             // --- View that pumps the controller and applies the result to the Transform ---
             var rig = headPivot.gameObject.AddComponent<CameraRigView>();
-            rig.Initialize(_controller, headPivot, screenCenter);
+            rig.Initialize(controller, headPivot, screenCenter);
 
-            _controller.Start();
+            controller.Start();
+
+            // Re-assert the authored neutral AFTER Start (which overlays persisted PlayerPrefs
+            // calibration). The per-scene user reference must win so the neutral camera position
+            // equals the Configurator preview; otherwise a stale persisted positionOffset/orbit
+            // neutral places the camera elsewhere.
+            var cal = controller.Calibration;
+            AlignNeutralToUserReference(ref cal, screenCenter, spatialLayout.userReferencePosition);
+            controller.SetCalibration(cal);
+            controller.ResetOrbit();
 
             // --- Diagnostics ---
             if (enableAutosave)
             {
                 var saver = gameObject.AddComponent<CalibrationAutoSaverView>();
-                saver.Initialize(_controller);
+                saver.Initialize(controller);
             }
             if (enableOverlay && uiPanelSettings != null && overlayUxml != null)
             {
@@ -142,24 +177,7 @@ namespace Hcp.Composition
                 uidoc.panelSettings = uiPanelSettings;
                 uidoc.visualTreeAsset = overlayUxml;
                 var overlay = overlayGO.AddComponent<DebugOverlayView>();
-                overlay.Initialize(_controller, headPivot, screenCenter);
-            }
-
-            // --- Apply this scene's saved spatial layout (authored in the Configurator) ---
-            {
-                var seed = spatialConfig != null ? spatialConfig.ToSpatialLayout() : SpatialLayout.Defaults();
-                ISpatialLayoutStore spatialStore = new JsonFileSpatialLayoutStore(SceneManager.GetActiveScene().name);
-                var spatial = new SpatialLayoutService(seed, spatialStore);
-                var layout = spatial.Current;
-
-                screenCenter.SetPositionAndRotation(layout.monitorPosition, Quaternion.Euler(layout.monitorEuler));
-                if (offAxis != null)
-                {
-                    offAxis.screenWidth = layout.monitorWidth;
-                    offAxis.screenHeight = layout.monitorHeight;
-                }
-                // Neutral viewpoint: head pivot at the user reference (monitor-relative).
-                headPivot.position = screenCenter.TransformPoint(layout.userReferencePosition);
+                overlay.Initialize(controller, headPivot, screenCenter);
             }
 
             // --- Esc overlay: back to main menu from any scene ---
@@ -173,9 +191,51 @@ namespace Hcp.Composition
             if (cfg.autoLaunchTracker)
             {
                 string exe = ResolvePath(cfg.trackerExeRelativePath);
-                _tracker = new FaceTrackerProcessAdapter(exe, cfg.trackerArguments, cfg.trackerShowWindow);
-                _tracker.Start();
+                tracker = new FaceTrackerProcessAdapter(exe, cfg.trackerArguments, cfg.trackerShowWindow);
+                tracker.Start();
             }
+        }
+
+        // Sets the head-tracking neutral so that, with no head motion, the camera eye sits at
+        // the authored user reference (world = screenCenter.TransformPoint(userRef)). The off-axis
+        // projection depends only on eye POSITION, so we only need to match that — rotation is
+        // driven by the projection matrices, not the transform.
+        //  - Direct: the eye world position at neutral is exactly positionOffset (headPivot is a
+        //    scene root, so localPosition == world position).
+        //  - Orbit:  the steady-state eye = orbitTarget(=screenCenter) + Euler(pitch,yaw)*(0,0,-dist),
+        //    where neutral yaw/pitch come from compositionOffsetDeg and dist from orbitBaseDistance.
+        private static void AlignNeutralToUserReference(ref CalibrationData cal, Transform screenCenter, Vector3 userRefLocal)
+        {
+            Vector3 worldEye = screenCenter.TransformPoint(userRefLocal);
+
+            if (cal.motionMode == MotionMode.Direct)
+            {
+                cal.positionOffset = worldEye;
+                return;
+            }
+
+            Vector3 fromTarget = worldEye - screenCenter.position;
+            float dist = fromTarget.magnitude;
+            if (dist < 1e-4f) return;
+
+            var rot = Quaternion.LookRotation(-fromTarget.normalized, Vector3.up);
+            float yaw = NormalizeAngle(rot.eulerAngles.y);
+            float pitch = NormalizeAngle(rot.eulerAngles.x);
+
+            cal.orbitBaseDistance = dist;
+            cal.orbitStartDistance = dist;
+            cal.orbitStartYaw = yaw;
+            cal.orbitStartPitch = pitch;
+            // Neutral (dx=dy=0) steady-state yaw/pitch come from the composition offset.
+            cal.compositionOffsetDeg = new Vector2(yaw, pitch);
+        }
+
+        private static float NormalizeAngle(float deg)
+        {
+            deg %= 360f;
+            if (deg > 180f) deg -= 360f;
+            else if (deg < -180f) deg += 360f;
+            return deg;
         }
 
         private static string ResolvePath(string relativeOrAbsolute)
@@ -192,10 +252,10 @@ namespace Hcp.Composition
 
         private void StopAll()
         {
-            if (_stopped) return;
-            _stopped = true;
-            try { _tracker?.Stop(); } catch { /* ignore */ }
-            try { _controller?.Stop(); } catch { /* ignore */ }
+            if (stopped) return;
+            stopped = true;
+            try { tracker?.Stop(); } catch { /* ignore */ }
+            try { controller?.Stop(); } catch { /* ignore */ }
         }
     }
 }

@@ -129,7 +129,6 @@ GameObject:
   m_Component:
   - component: {fileID: 60865166}
   - component: {fileID: 60865165}
-  - component: {fileID: 60865164}
   m_Layer: 0
   m_Name: Audio
   m_TagString: Untagged
@@ -137,19 +136,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &60865164
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 60865163}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4abe30ab2f31a86458365ba718741073, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Belen.Audio.AudioCrossfader
-  fadeDuration: 2
 --- !u!82 &60865165
 AudioSource:
   m_ObjectHideFlags: 0
@@ -272,7 +258,6 @@ GameObject:
   m_Component:
   - component: {fileID: 82050619}
   - component: {fileID: 82050618}
-  - component: {fileID: 82050617}
   m_Layer: 0
   m_Name: OpenSeeReceiver
   m_TagString: Untagged
@@ -280,34 +265,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &82050617
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 82050616}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 28b9a8db2d3b3ef489222dc89aa29cfa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Belen.Tracking.Sources.OpenSeeHeadPoseSource
-  openSee: {fileID: 82050618}
-  faceId: 0
-  positionScale: 1
-  axisScale: {x: 1, y: 1, z: 1}
-  swapYZ: 0
-  invertX: 0
-  invertY: 0
-  invertZ: 0
-  positionOffset: {x: 0, y: 0, z: 0}
-  rotationOffset: {x: 0, y: 0, z: 0}
-  estimateZFromFaceSize: 0
-  neutralDepthMeters: 0.6
-  neutralFacePixels: 0
-  zBlend: 1
-  zClamp: {x: 0.2, y: 2.5}
-  zSmoothTime: 0.12
 --- !u!114 &82050618
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1591,7 +1548,6 @@ GameObject:
   - component: {fileID: 744651610}
   - component: {fileID: 744651609}
   - component: {fileID: 744651608}
-  - component: {fileID: 744651607}
   m_Layer: 0
   m_Name: PromptCanvas
   m_TagString: Untagged
@@ -1599,20 +1555,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &744651607
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 744651606}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6837682833c7aa946a34afd05b26656e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Belen.UI.UIPromptController
-  presence: {fileID: 1033247491}
-  fadeSpeed: 4
 --- !u!225 &744651608
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -2180,7 +2122,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1004833499}
-  - component: {fileID: 1004833498}
   m_Layer: 0
   m_Name: FaceTrackerManager
   m_TagString: Untagged
@@ -2188,50 +2129,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1004833498
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1004833497}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b28abd7c96b2da144a2299906d248082, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Belen.Tracking.FaceTrackerManager
-  sourceBehaviour: {fileID: 82050617}
-  cameraPivot: {fileID: 1315055641}
-  applyHeadRotation: 1
-  positionOffset: {x: 0, y: 0, z: 0}
-  rotationOffset: {x: 0, y: 0, z: 0}
-  useDistanceGain: 0
-  neutralZ: 0.6
-  distanceGain: 1
-  zClamp: {x: 0.2, y: 2}
-  autoNeutral: 0
-  autoNeutralDuration: 2
-  snapNeutralOnStart: 1
-  motionMode: 1
-  orbitTarget: {fileID: 1246164849}
-  orbitBaseDistance: 1.2
-  yawDegreesPerMeter: 350
-  pitchDegreesPerMeter: 350
-  dollyMetersPerMeter: 1
-  pitchClamp: {x: -30, y: 30}
-  distanceClamp: {x: 0.3, y: 3}
-  neutralXY: {x: 0, y: 0}
-  orbitKeepHorizon: 1
-  yawClamp: {x: -60, y: 60}
-  deadzoneX: 0.02
-  deadzoneY: 0.02
-  responseExponent: 1
-  orbitSmoothTime: 0.12
-  compositionOffsetDeg: {x: 0, y: 0}
-  applyOrbitStartOnEnable: 1
-  orbitStartYaw: 0
-  orbitStartPitch: -10
-  orbitStartDistance: 1.4
 --- !u!4 &1004833499
 Transform:
   m_ObjectHideFlags: 0
@@ -2256,7 +2153,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1033247492}
-  - component: {fileID: 1033247491}
   m_Layer: 0
   m_Name: PresenceDetector
   m_TagString: Untagged
@@ -2264,26 +2160,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1033247491
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1033247490}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4069eba09480c2f4dab8df15b428ebf1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Belen.Interaction.PresenceDetector
-  sourceBehaviour: {fileID: 1199942282}
-  absenceTimeout: 2
-  onPresent:
-    m_PersistentCalls:
-      m_Calls: []
-  onAbsent:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!4 &1033247492
 Transform:
   m_ObjectHideFlags: 0
@@ -2309,10 +2185,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1108120190}
   - component: {fileID: 1108120193}
-  - component: {fileID: 1108120192}
-  - component: {fileID: 1108120191}
   - component: {fileID: 1108120194}
-  - component: {fileID: 1108120195}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -2335,46 +2208,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1315055641}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1108120191
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1108120189}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cfe6dc7acb33c7740ba38ce689657cb8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Belen.Rendering.OffAxisScreenPreset
-  target: {fileID: 1108120192}
-  preset: 1
-  autoApply: 1
-  diagonalInches: 27
-  aspectX: 16
-  aspectY: 9
---- !u!114 &1108120192
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1108120189}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f5235b94cda934148b64fab6e960ae37, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Belen.Rendering.OffAxisCamera
-  screenCenter: {fileID: 1246164849}
-  flipScreenUp: 0
-  flipScreenRight: 0
-  screenWidth: 0.5977265
-  screenHeight: 0.33622116
-  eyeTransform: {fileID: 1315055641}
-  nearClip: 0.01
-  farClip: 100
-  overrideCameraMatrices: 0
-  drawGizmos: 1
 --- !u!20 &1108120193
 Camera:
   m_ObjectHideFlags: 0
@@ -2470,35 +2303,6 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
---- !u!114 &1108120195
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1108120189}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ca725d7bce7b9944d93964d37b1e880e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Belen.Rendering.SimpleParallaxCamera
-  screenCenter: {fileID: 1246164849}
-  eyeTransform: {fileID: 1315055641}
-  gainXY: {x: 1, y: 1}
-  invertX: 0
-  invertY: 0
-  useZ: 1
-  zGain: 1
-  clampX: {x: -0.5, y: 0.5}
-  clampY: {x: -0.3, y: 0.3}
-  clampZ: {x: 0.2, y: 3}
-  focusDepth: 2
-  smooth: 1
-  posSmoothTimeXY: 0.12
-  posSmoothTimeZ: 0.18
-  rotSmoothTime: 0.12
-  deadzoneX: 0.003
-  deadzoneY: 0.003
 --- !u!1 &1129153541
 GameObject:
   m_ObjectHideFlags: 0
@@ -2619,7 +2423,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1199942283}
-  - component: {fileID: 1199942282}
   m_Layer: 0
   m_Name: KeyboardHeadPoseEmulator
   m_TagString: Untagged
@@ -2627,22 +2430,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
---- !u!114 &1199942282
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1199942281}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f97ae5429c12cf94fbddca34b3bc88ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Belen.Tracking.Sources.KeyboardHeadPoseEmulator
-  position: {x: 0, y: 0.2, z: 0.6}
-  moveSpeed: 0.3
-  euler: {x: 0, y: 0, z: 0}
-  rotSpeed: 30
 --- !u!4 &1199942283
 Transform:
   m_ObjectHideFlags: 0
@@ -3090,7 +2877,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1508633227}
-  - component: {fileID: 1508633226}
   m_Layer: 0
   m_Name: SceneFlow
   m_TagString: Untagged
@@ -3098,47 +2884,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1508633226
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1508633225}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f71cce6b361d5584ba52dc85191baea2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Belen.Scenes.BelenSceneController
-  scenes:
-  - name: Anunciacion
-    duration: 22
-    music: {fileID: 0}
-    roots:
-    - {fileID: 1697039793}
-  - name: CaminoABelen
-    duration: 22
-    music: {fileID: 0}
-    roots:
-    - {fileID: 368206562}
-  - name: Nacimiento
-    duration: 22
-    music: {fileID: 0}
-    roots:
-    - {fileID: 1606905874}
-  - name: AnuncioPastores
-    duration: 22
-    music: {fileID: 0}
-    roots:
-    - {fileID: 591093861}
-  - name: AdoracionReyes
-    duration: 22
-    music: {fileID: 0}
-    roots:
-    - {fileID: 503163971}
-  crossfader: {fileID: 60865164}
-  introFade: 1
-  betweenFade: 1
 --- !u!4 &1508633227
 Transform:
   m_ObjectHideFlags: 0
@@ -3797,9 +3542,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2032182296}
-  - component: {fileID: 2032182295}
-  - component: {fileID: 2032182294}
-  - component: {fileID: 2032182293}
   m_Layer: 0
   m_Name: DebugUI
   m_TagString: Untagged
@@ -3807,58 +3549,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &2032182293
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2032182292}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bd2818da524d4bb4fa8dcf72ba279175, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Belen.DebugUI.CalibrationAutoSaver
-  tracker: {fileID: 1004833498}
-  offAxis: {fileID: 0}
-  saveDelay: 1
---- !u!114 &2032182294
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2032182292}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 75f25b5d0b621f1499c763f63afa003d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Belen.DebugUI.CalibrationPanel
-  toggleKey: 282
-  toggleSourceKey: 283
-  visible: 1
-  tracker: {fileID: 1004833498}
-  sourceBehaviour: {fileID: 82050617}
-  offAxis: {fileID: 1108120192}
-  simpleParallax: {fileID: 0}
-  simpleParallaxOnly: 1
-  openSeeSource: {fileID: 82050617}
-  keyboardSource: {fileID: 0}
---- !u!114 &2032182295
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2032182292}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3416f871ca37e074ea463cdfc0cbbd6e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Belen.DebugUI.DebugOverlay
-  tracker: {fileID: 1004833498}
-  offAxis: {fileID: 1108120192}
-  headPivot: {fileID: 1315055641}
 --- !u!4 &2032182296
 Transform:
   m_ObjectHideFlags: 0

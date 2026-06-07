@@ -1,76 +1,305 @@
+/* ===========================================================================
+   HCP spatial editor — web-inspired design system for UI Toolkit.
+   Tokens (custom properties) mimic a CSS :root. Defined on .spatial-root and
+   inherited by descendants via var().
+   =========================================================================== */
 .spatial-root {
+    --bg-panel: rgba(18, 20, 26, 0.92);
+    --bg-card: rgba(255, 255, 255, 0.04);
+    --bg-input: rgb(232, 234, 238);
+    --border-soft: rgba(255, 255, 255, 0.08);
+    --border-card: rgba(255, 255, 255, 0.06);
+    --text-primary: rgb(232, 234, 238);
+    --text-muted: rgb(148, 156, 168);
+    --text-dark: rgb(22, 24, 28);
+    --accent: rgb(64, 220, 130);
+    --accent-strong: rgb(46, 196, 110);
+    --section: rgb(150, 178, 255);
+    --axis-x: rgb(235, 100, 100);
+    --axis-y: rgb(120, 200, 120);
+    --axis-z: rgb(100, 150, 235);
+    --radius-lg: 12px;
+    --radius-md: 8px;
+    --radius-sm: 5px;
+
     position: absolute;
     top: 8px;
     right: 8px;
-    width: 280px;
+    bottom: 8px;
+    width: 296px;
     padding: 10px;
-    background-color: rgba(0, 0, 0, 0.72);
-    border-radius: 6px;
+    flex-direction: column;
+    background-color: var(--bg-panel);
+    border-width: 1px;
+    border-color: var(--border-soft);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
 }
 
+/* ---- Header --------------------------------------------------------------- */
 .spatial-title {
-    color: rgb(120, 255, 140);
-    font-size: 15px;
+    color: var(--accent);
+    font-size: 14px;
     -unity-font-style: bold;
+    letter-spacing: 0.5px;
+    padding-bottom: 6px;
+    margin-bottom: 6px;
+    border-bottom-width: 1px;
+    border-bottom-color: var(--border-soft);
+}
+
+/* ---- Scroll body (fills remaining height; shrinks so footer stays visible)  */
+.spatial-scroll {
+    flex-grow: 1;
+    min-height: 0;
+}
+
+.spatial-scroll .unity-scroll-view__content-container {
+    padding-right: 6px;
+}
+
+/* Thin modern scrollbar */
+.spatial-scroll .unity-scroller--vertical {
+    width: 8px;
+    background-color: rgba(0, 0, 0, 0);
+    border-width: 0;
+}
+
+.spatial-scroll .unity-scroller--vertical .unity-base-slider__tracker {
+    background-color: rgba(0, 0, 0, 0);
+    border-width: 0;
+}
+
+.spatial-scroll .unity-scroller--vertical #unity-dragger {
+    background-color: rgba(255, 255, 255, 0.16);
+    border-width: 0;
+    border-radius: 4px;
+    width: 6px;
+    margin-left: 1px;
+    transition-property: background-color;
+    transition-duration: 120ms;
+}
+
+.spatial-scroll .unity-scroller--vertical #unity-dragger:hover {
+    background-color: rgba(255, 255, 255, 0.30);
+}
+
+/* Hide scroller arrow buttons (web-like minimal track) */
+.spatial-scroll .unity-scroller__low-button,
+.spatial-scroll .unity-scroller__high-button {
+    display: none;
+}
+
+/* ---- Cards (grouped sections) -------------------------------------------- */
+.spatial-card {
+    background-color: var(--bg-card);
+    border-width: 1px;
+    border-color: var(--border-card);
+    border-radius: var(--radius-md);
+    padding: 8px;
     margin-bottom: 6px;
 }
 
 .spatial-section {
-    color: rgb(180, 200, 255);
-    font-size: 12px;
+    color: var(--section);
+    font-size: 10px;
     -unity-font-style: bold;
-    margin-top: 8px;
-    margin-bottom: 2px;
+    letter-spacing: 0.6px;
+    margin-bottom: 4px;
+}
+
+/* Clickable section header — selects its scene element. */
+.spatial-section--pick {
+    padding: 2px 4px;
+    margin-left: -4px;
+    margin-right: -4px;
+    border-radius: var(--radius-sm);
+    transition-property: background-color, color;
+    transition-duration: 120ms;
+}
+
+.spatial-section--pick:hover {
+    color: var(--accent);
+    background-color: rgba(255, 255, 255, 0.06);
 }
 
 .spatial-root Label {
-    color: rgb(235, 235, 235);
+    color: var(--text-primary);
 }
 
-/* Field labels (FloatField / Vector3Field / DropdownField) */
+/* ---- Fields (compact) ----------------------------------------------------- */
+.spatial-root .unity-base-field {
+    margin-top: 2px;
+    margin-bottom: 2px;
+    align-items: center;
+}
+
 .spatial-root .unity-base-field__label {
-    color: rgb(235, 235, 235);
-    font-size: 12px;
-    min-width: 80px;
+    color: var(--text-muted);
+    font-size: 11px;
+    min-width: 70px;
+    -unity-text-align: middle-left;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-top: 0;
+    margin-bottom: 0;
 }
 
-/* Field input boxes: light background + dark text for contrast */
 .spatial-root .unity-base-field__input,
 .spatial-root .unity-base-text-field__input {
-    color: rgb(20, 20, 20);
-    background-color: rgb(235, 235, 235);
-    border-radius: 3px;
-    border-width: 0;
+    color: var(--text-dark);
+    background-color: var(--bg-input);
+    border-radius: var(--radius-sm);
+    border-width: 1px;
+    border-color: rgba(0, 0, 0, 0);
+    height: 19px;
+    font-size: 11px;
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-left: 5px;
+    padding-right: 5px;
+    transition-property: border-color, background-color;
+    transition-duration: 120ms;
 }
 
-/* Vector3 sub-field x/y/z labels */
-.spatial-root .unity-composite-field__field-spacer,
-.spatial-root .unity-vector3-field .unity-base-field__label {
-    color: rgb(235, 235, 235);
-    min-width: 12px;
+.spatial-root .unity-base-field__input:hover,
+.spatial-root .unity-base-text-field__input:hover {
+    background-color: rgb(244, 246, 250);
+}
+
+.spatial-root .unity-base-field:focus .unity-base-field__input,
+.spatial-root .unity-base-text-field__input:focus {
+    border-color: var(--accent);
+}
+
+/* Vector3 built from 3 explicit FloatFields (axis-x/y/z) so X/Y/Z labels can be
+   colored from USS — no C# tint. Layout: main label + a row of 3 axes. */
+.vec-row {
+    flex-direction: row;
+    align-items: center;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.vec-row__label {
+    color: var(--text-muted);
+    font-size: 11px;
+    min-width: 70px;
+    flex-shrink: 0;
+    -unity-text-align: middle-left;
+}
+
+.axis .unity-base-field__input {
+    min-width: 24px;
+}
+
+.vec-row__axes {
+    flex-direction: row;
+    flex-grow: 1;
+}
+
+.axis {
+    flex-grow: 1;
+    flex-basis: 0;
+    margin-left: 3px;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.axis .unity-base-field__label {
+    min-width: 9px;
+    margin-right: 1px;
+    padding-right: 0;
+    -unity-font-style: bold;
+    font-size: 11px;
+}
+
+.axis-x .unity-base-field__label {
+    color: var(--axis-x);
+}
+
+.axis-y .unity-base-field__label {
+    color: var(--axis-y);
+}
+
+.axis-z .unity-base-field__label {
+    color: var(--axis-z);
 }
 
 /* Dropdown displayed text */
 .spatial-root .unity-base-popup-field__text {
-    color: rgb(20, 20, 20);
+    color: var(--text-dark);
 }
 
+/* ---- Rows / segmented control -------------------------------------------- */
 .spatial-row {
     flex-direction: row;
     justify-content: space-between;
-    margin-top: 10px;
+    margin-top: 6px;
 }
 
+.spatial-segment {
+    margin-top: 4px;
+}
+
+/* ---- Buttons -------------------------------------------------------------- */
 .spatial-btn {
     flex-grow: 1;
+    height: 24px;
     margin: 2px;
-    color: rgb(20, 20, 20);
+    padding: 0 6px;
+    color: var(--text-primary);
+    background-color: rgba(255, 255, 255, 0.07);
+    border-width: 1px;
+    border-color: var(--border-soft);
+    border-radius: var(--radius-sm);
     -unity-font-style: bold;
+    font-size: 11px;
+    transition-property: background-color, border-color, scale;
+    transition-duration: 120ms;
+}
+
+.spatial-btn:hover {
+    background-color: rgba(255, 255, 255, 0.14);
+    border-color: rgba(255, 255, 255, 0.22);
+}
+
+.spatial-btn:active {
+    background-color: rgba(255, 255, 255, 0.20);
+    scale: 0.97 0.97;
+}
+
+.spatial-btn-primary {
+    color: var(--text-dark);
+    background-color: var(--accent);
+    border-color: var(--accent-strong);
+}
+
+.spatial-btn-primary:hover {
+    background-color: var(--accent-strong);
+    border-color: var(--accent-strong);
+}
+
+.spatial-btn-ghost {
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.spatial-btn-ghost:hover {
+    background-color: rgba(255, 255, 255, 0.10);
+}
+
+/* ---- Footer (pinned below scroll) ---------------------------------------- */
+.spatial-footer {
+    padding-top: 6px;
+    margin-top: 2px;
+    border-top-width: 1px;
+    border-top-color: var(--border-soft);
 }
 
 .spatial-hint {
-    color: rgb(150, 150, 150);
-    font-size: 10px;
+    color: var(--text-muted);
+    font-size: 9px;
     margin-top: 6px;
+    white-space: normal;
     -unity-text-align: middle-center;
 }

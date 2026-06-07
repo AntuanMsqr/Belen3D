@@ -13,49 +13,49 @@ namespace Hcp.HeadTracking.Infrastructure
         public event Action OnPresent;
         public event Action OnAbsent;
 
-        private IHeadPoseSource _source;
-        private double _lastTs;
-        private volatile bool _gotPoseFlag;
-        private bool _isPresent;
+        private IHeadPoseSource source;
+        private double lastTs;
+        private volatile bool gotPoseFlag;
+        private bool isPresent;
 
-        public bool IsPresent => _isPresent;
+        public bool IsPresent => isPresent;
 
         public void Initialize(IHeadPoseSource source)
         {
-            if (_source != null) _source.OnPose -= HandlePose;
-            _source = source;
-            if (_source != null) _source.OnPose += HandlePose;
+            if (this.source != null) this.source.OnPose -= HandlePose;
+            this.source = source;
+            if (this.source != null) this.source.OnPose += HandlePose;
         }
 
         private void OnDestroy()
         {
-            if (_source != null) _source.OnPose -= HandlePose;
+            if (source != null) source.OnPose -= HandlePose;
         }
 
         // May be raised off the main thread (UDP sources) — keep it trivial.
         private void HandlePose(HeadPose pose)
         {
-            _gotPoseFlag = true;
+            gotPoseFlag = true;
         }
 
         private void Update()
         {
             double now = Time.realtimeSinceStartupAsDouble;
 
-            if (_gotPoseFlag)
+            if (gotPoseFlag)
             {
-                _gotPoseFlag = false;
-                _lastTs = now;
-                if (!_isPresent)
+                gotPoseFlag = false;
+                lastTs = now;
+                if (!isPresent)
                 {
-                    _isPresent = true;
+                    isPresent = true;
                     OnPresent?.Invoke();
                 }
             }
 
-            if (_isPresent && (now - _lastTs) > absenceTimeout)
+            if (isPresent && (now - lastTs) > absenceTimeout)
             {
-                _isPresent = false;
+                isPresent = false;
                 OnAbsent?.Invoke();
             }
         }

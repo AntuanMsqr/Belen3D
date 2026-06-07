@@ -13,53 +13,68 @@ namespace Hcp.Presentation.Infrastructure
     // off-axis projection stay in sync. Keys: W move, E rotate, R scale (monitor), Esc deselect.
     public class RuntimeGizmoView : MonoBehaviour
     {
-        private Camera _cam;
-        private SpatialLayoutService _service;
-        private SpatialProxyView _proxy;
+        private Camera cam;
+        private SpatialLayoutService service;
+        private SpatialProxyView proxy;
 
-        private SpatialTarget _selected;
-        private GizmoMode _mode = GizmoMode.Move;
+        private SpatialTarget selected;
+        private GizmoMode mode = GizmoMode.Move;
 
         // Layer for gizmo handles so the preview camera can exclude them.
         public int handleLayer = 0;
 
         // Gizmo geometry
-        private Transform _root, _moveRoot, _rotateRoot, _scaleRoot;
+        private Transform root, moveRoot, rotateRoot, scaleRoot;
 
         // Drag state
-        private GizmoHandle _activeHandle;
-        private Vector3 _dragStartPos;
-        private Quaternion _dragStartRot;
-        private Vector3 _dragAxisWorld;
-        private float _dragStartT;
-        private Vector3 _rotStartDir;
-        private float _scaleStartW, _scaleStartH;
+        private GizmoHandle activeHandle;
+        private Vector3 dragStartPos;
+        private Quaternion dragStartRot;
+        private Vector3 dragAxisWorld;
+        private float dragStartT;
+        private Vector3 rotStartDir;
+        private float scaleStartW, scaleStartH;
 
         // Notifies the UI: "Monitor", "Cam 1", "Usuario" or "" (none) + mode.
         public event Action<string> SelectionChanged;
-        public GizmoMode Mode => _mode;
+        public GizmoMode Mode => mode;
 
         public void Initialize(Camera cam, SpatialLayoutService service, SpatialProxyView proxy)
         {
-            _cam = cam;
-            _service = service;
-            _proxy = proxy;
+            this.cam = cam;
+            this.service = service;
+            this.proxy = proxy;
             BuildGizmo();
             SetSelected(null);
         }
 
+        // Select a scene target by kind (used by the UI panel: clicking a section header
+        // selects its equivalent proxy in the scene). index only matters for cameras.
+        public void Select(SpatialKind kind, int index = 0)
+        {
+            SpatialTarget match = null;
+            foreach (var t in FindObjectsByType<SpatialTarget>(FindObjectsSortMode.None))
+            {
+                if (t.kind != kind) continue;
+                if (kind == SpatialKind.Camera && t.index != index) continue;
+                match = t;
+                break;
+            }
+            if (match != null) SetSelected(match);
+        }
+
         public void SetMode(GizmoMode mode)
         {
-            _mode = mode;
-            if (_mode == GizmoMode.Scale && (_selected == null || _selected.kind != SpatialKind.Monitor))
-                _mode = GizmoMode.Move; // scale only applies to the monitor
+            this.mode = mode;
+            if (this.mode == GizmoMode.Scale && (selected == null || selected.kind != SpatialKind.Monitor))
+                this.mode = GizmoMode.Move; // scale only applies to the monitor
             RefreshGizmoVisibility();
             RaiseSelectionChanged();
         }
 
         private void Update()
         {
-            if (_cam == null) return;
+            if (cam == null) return;
             ReadInput(out var mousePos, out var down, out var held, out var up,
                       out var kMove, out var kRot, out var kScale);
 
@@ -71,18 +86,18 @@ namespace Hcp.Presentation.Infrastructure
 
             if (down)
             {
-                if (_selected != null && TryPickHandle(ray, out var handle))
+                if (selected != null && TryPickHandle(ray, out var handle))
                     BeginDrag(handle, ray);
                 else
                     SetSelected(PickTarget(ray));
             }
-            else if (held && _activeHandle != null)
+            else if (held && activeHandle != null)
             {
                 Drag(ray);
             }
             else if (up)
             {
-                _activeHandle = null;
+                activeHandle = null;
             }
 
             UpdateGizmoTransform();
@@ -92,21 +107,21 @@ namespace Hcp.Presentation.Infrastructure
 
         private void SetSelected(SpatialTarget t)
         {
-            _selected = t;
-            _activeHandle = null;
-            if (_selected == null || _selected.kind != SpatialKind.Monitor) // keep scale valid
-                if (_mode == GizmoMode.Scale) _mode = GizmoMode.Move;
+            selected = t;
+            activeHandle = null;
+            if (selected == null || selected.kind != SpatialKind.Monitor) // keep scale valid
+                if (mode == GizmoMode.Scale) mode = GizmoMode.Move;
             RefreshGizmoVisibility();
             RaiseSelectionChanged();
         }
 
         private void RaiseSelectionChanged()
         {
-            string name = _selected == null ? "—"
-                : _selected.kind == SpatialKind.Monitor ? "Monitor"
-                : _selected.kind == SpatialKind.User ? "Usuario"
-                : $"Cam {_selected.index}";
-            SelectionChanged?.Invoke($"{name}  [{_mode}]");
+            string name = selected == null ? "—"
+                : selected.kind == SpatialKind.Monitor ? "Monitor"
+                : selected.kind == SpatialKind.User ? "Usuario"
+                : $"Cam {selected.index}";
+            SelectionChanged?.Invoke($"{name}  [{mode}]");
         }
 
         private SpatialTarget PickTarget(Ray ray)
@@ -139,58 +154,58 @@ namespace Hcp.Presentation.Infrastructure
 
         private void BeginDrag(GizmoHandle handle, Ray ray)
         {
-            _activeHandle = handle;
-            _dragStartPos = _selected.transform.position;
-            _dragStartRot = _selected.transform.rotation;
-            _dragAxisWorld = AxisWorld(handle);
+            activeHandle = handle;
+            dragStartPos = selected.transform.position;
+            dragStartRot = selected.transform.rotation;
+            dragAxisWorld = AxisWorld(handle);
 
             if (handle.type == HandleType.RotateAxis)
             {
-                if (PlaneHit(ray, _dragStartPos, _dragAxisWorld, out var hit))
-                    _rotStartDir = Vector3.ProjectOnPlane(hit - _dragStartPos, _dragAxisWorld).normalized;
+                if (PlaneHit(ray, dragStartPos, dragAxisWorld, out var hit))
+                    rotStartDir = Vector3.ProjectOnPlane(hit - dragStartPos, dragAxisWorld).normalized;
             }
             else if (handle.type == HandleType.ScaleAxis)
             {
-                _scaleStartW = _service.Current.monitorWidth;
-                _scaleStartH = _service.Current.monitorHeight;
-                _dragStartT = ClosestT(ray, _dragStartPos, _dragAxisWorld);
+                scaleStartW = service.Current.monitorWidth;
+                scaleStartH = service.Current.monitorHeight;
+                dragStartT = ClosestT(ray, dragStartPos, dragAxisWorld);
             }
             else // MoveAxis
             {
-                _dragStartT = ClosestT(ray, _dragStartPos, _dragAxisWorld);
+                dragStartT = ClosestT(ray, dragStartPos, dragAxisWorld);
             }
         }
 
         private void Drag(Ray ray)
         {
-            switch (_activeHandle.type)
+            switch (activeHandle.type)
             {
                 case HandleType.MoveAxis:
                 {
-                    float t = ClosestT(ray, _dragStartPos, _dragAxisWorld);
-                    var newPos = _dragStartPos + _dragAxisWorld * (t - _dragStartT);
-                    _proxy.PushWorldTransform(_selected, newPos, _dragStartRot);
+                    float t = ClosestT(ray, dragStartPos, dragAxisWorld);
+                    var newPos = dragStartPos + dragAxisWorld * (t - dragStartT);
+                    proxy.PushWorldTransform(selected, newPos, dragStartRot);
                     break;
                 }
                 case HandleType.RotateAxis:
                 {
-                    if (PlaneHit(ray, _dragStartPos, _dragAxisWorld, out var hit))
+                    if (PlaneHit(ray, dragStartPos, dragAxisWorld, out var hit))
                     {
-                        var dir = Vector3.ProjectOnPlane(hit - _dragStartPos, _dragAxisWorld).normalized;
-                        float ang = Vector3.SignedAngle(_rotStartDir, dir, _dragAxisWorld);
-                        var newRot = Quaternion.AngleAxis(ang, _dragAxisWorld) * _dragStartRot;
-                        _proxy.PushWorldTransform(_selected, _dragStartPos, newRot);
+                        var dir = Vector3.ProjectOnPlane(hit - dragStartPos, dragAxisWorld).normalized;
+                        float ang = Vector3.SignedAngle(rotStartDir, dir, dragAxisWorld);
+                        var newRot = Quaternion.AngleAxis(ang, dragAxisWorld) * dragStartRot;
+                        proxy.PushWorldTransform(selected, dragStartPos, newRot);
                     }
                     break;
                 }
                 case HandleType.ScaleAxis:
                 {
-                    float t = ClosestT(ray, _dragStartPos, _dragAxisWorld);
-                    float delta = t - _dragStartT;
-                    if (_activeHandle.axis == 0)
-                        _proxy.PushMonitorScale(Mathf.Max(0.02f, _scaleStartW + 2f * delta), _service.Current.monitorHeight);
+                    float t = ClosestT(ray, dragStartPos, dragAxisWorld);
+                    float delta = t - dragStartT;
+                    if (activeHandle.axis == 0)
+                        proxy.PushMonitorScale(Mathf.Max(0.02f, scaleStartW + 2f * delta), service.Current.monitorHeight);
                     else
-                        _proxy.PushMonitorScale(_service.Current.monitorWidth, Mathf.Max(0.02f, _scaleStartH + 2f * delta));
+                        proxy.PushMonitorScale(service.Current.monitorWidth, Mathf.Max(0.02f, scaleStartH + 2f * delta));
                     break;
                 }
             }
@@ -198,10 +213,10 @@ namespace Hcp.Presentation.Infrastructure
 
         private Vector3 AxisWorld(GizmoHandle h)
         {
-            if (h.type == HandleType.ScaleAxis && _selected != null)
+            if (h.type == HandleType.ScaleAxis && selected != null)
             {
                 // monitor-local axes
-                var rot = _selected.transform.rotation;
+                var rot = selected.transform.rotation;
                 return h.axis == 0 ? rot * Vector3.right : rot * Vector3.up;
             }
             // global world axes for move/rotate
@@ -212,12 +227,12 @@ namespace Hcp.Presentation.Infrastructure
 
         private void BuildGizmo()
         {
-            _root = new GameObject("Gizmo").transform;
-            _root.SetParent(transform, false);
+            root = new GameObject("Gizmo").transform;
+            root.SetParent(transform, false);
 
-            _moveRoot = NewChild(_root, "Move");
-            _rotateRoot = NewChild(_root, "Rotate");
-            _scaleRoot = NewChild(_root, "Scale");
+            moveRoot = NewChild(root, "Move");
+            rotateRoot = NewChild(root, "Rotate");
+            scaleRoot = NewChild(root, "Scale");
 
             var red = new Color(0.95f, 0.3f, 0.3f);
             var green = new Color(0.4f, 0.9f, 0.4f);
@@ -225,20 +240,20 @@ namespace Hcp.Presentation.Infrastructure
             var yellow = new Color(1f, 0.85f, 0.25f);
 
             // Move arrows (shaft + tip) along X/Y/Z
-            BuildArrow(_moveRoot, 0, Vector3.right, Quaternion.Euler(0, 0, -90f), red);
-            BuildArrow(_moveRoot, 1, Vector3.up, Quaternion.identity, green);
-            BuildArrow(_moveRoot, 2, Vector3.forward, Quaternion.Euler(90f, 0, 0), blue);
+            BuildArrow(moveRoot, 0, Vector3.right, Quaternion.Euler(0, 0, -90f), red);
+            BuildArrow(moveRoot, 1, Vector3.up, Quaternion.identity, green);
+            BuildArrow(moveRoot, 2, Vector3.forward, Quaternion.Euler(90f, 0, 0), blue);
 
             // Rotate rings (normal = axis)
-            BuildRing(_rotateRoot, 0, Quaternion.Euler(0, 0, 90f), red);
-            BuildRing(_rotateRoot, 1, Quaternion.identity, green);
-            BuildRing(_rotateRoot, 2, Quaternion.Euler(90f, 0, 0), blue);
+            BuildRing(rotateRoot, 0, Quaternion.Euler(0, 0, 90f), red);
+            BuildRing(rotateRoot, 1, Quaternion.identity, green);
+            BuildRing(rotateRoot, 2, Quaternion.Euler(90f, 0, 0), blue);
 
             // Scale handles for monitor width (X) / height (Y)
-            BuildScaleHandle(_scaleRoot, 0, new Vector3(0.9f, 0, 0), yellow);
-            BuildScaleHandle(_scaleRoot, 1, new Vector3(0, 0.9f, 0), yellow);
+            BuildScaleHandle(scaleRoot, 0, new Vector3(0.9f, 0, 0), yellow);
+            BuildScaleHandle(scaleRoot, 1, new Vector3(0, 0.9f, 0), yellow);
 
-            SetLayerRecursive(_root, handleLayer);
+            SetLayerRecursive(root, handleLayer);
         }
 
         private static void SetLayerRecursive(Transform t, int layer)
@@ -294,33 +309,33 @@ namespace Hcp.Presentation.Infrastructure
 
         private void UpdateGizmoTransform()
         {
-            if (_root == null) return;
-            if (_selected == null) { _root.gameObject.SetActive(false); return; }
+            if (root == null) return;
+            if (selected == null) { root.gameObject.SetActive(false); return; }
 
-            var t = _selected.transform;
+            var t = selected.transform;
             // Keep the origin fixed while dragging so the axis line stays stable.
-            if (_activeHandle == null) _root.position = t.position;
-            _root.rotation = Quaternion.identity; // move/rotate use world axes
+            if (activeHandle == null) root.position = t.position;
+            root.rotation = Quaternion.identity; // move/rotate use world axes
 
             // Scale handles follow the monitor orientation.
-            if (_scaleRoot != null) _scaleRoot.rotation = t.rotation;
+            if (scaleRoot != null) scaleRoot.rotation = t.rotation;
 
             // Constant-ish on-screen size.
-            float dist = Vector3.Distance(_cam.transform.position, _root.position);
-            if (_activeHandle == null)
-                _root.localScale = Vector3.one * Mathf.Max(0.05f, dist * 0.16f);
+            float dist = Vector3.Distance(cam.transform.position, root.position);
+            if (activeHandle == null)
+                root.localScale = Vector3.one * Mathf.Max(0.05f, dist * 0.16f);
         }
 
         private void RefreshGizmoVisibility()
         {
-            if (_root == null) return;
-            bool any = _selected != null;
-            _root.gameObject.SetActive(any);
+            if (root == null) return;
+            bool any = selected != null;
+            root.gameObject.SetActive(any);
             if (!any) return;
-            bool isMonitor = _selected.kind == SpatialKind.Monitor;
-            _moveRoot.gameObject.SetActive(_mode == GizmoMode.Move);
-            _rotateRoot.gameObject.SetActive(_mode == GizmoMode.Rotate);
-            _scaleRoot.gameObject.SetActive(_mode == GizmoMode.Scale && isMonitor);
+            bool isMonitor = selected.kind == SpatialKind.Monitor;
+            moveRoot.gameObject.SetActive(mode == GizmoMode.Move);
+            rotateRoot.gameObject.SetActive(mode == GizmoMode.Rotate);
+            scaleRoot.gameObject.SetActive(mode == GizmoMode.Scale && isMonitor);
         }
 
         // --- Math helpers -----------------------------------------------------------
@@ -329,10 +344,10 @@ namespace Hcp.Presentation.Infrastructure
         {
             // Build the ray from the camera's actual matrices so the off-axis projection
             // (custom projectionMatrix) is respected — Camera.ScreenPointToRay can't.
-            var vp = _cam.projectionMatrix * _cam.worldToCameraMatrix;
+            var vp = cam.projectionMatrix * cam.worldToCameraMatrix;
             var inv = vp.inverse;
-            float nx = 2f * sp.x / Mathf.Max(1, _cam.pixelWidth) - 1f;
-            float ny = 2f * sp.y / Mathf.Max(1, _cam.pixelHeight) - 1f;
+            float nx = 2f * sp.x / Mathf.Max(1, cam.pixelWidth) - 1f;
+            float ny = 2f * sp.y / Mathf.Max(1, cam.pixelHeight) - 1f;
             Vector4 nearH = inv * new Vector4(nx, ny, -1f, 1f);
             Vector4 farH = inv * new Vector4(nx, ny, 1f, 1f);
             var near = new Vector3(nearH.x, nearH.y, nearH.z) / nearH.w;
@@ -414,9 +429,9 @@ namespace Hcp.Presentation.Infrastructure
             h.axis = axis;
         }
 
-        private static Shader _gizmoShader;
+        private static Shader gizmoShader;
         private static Shader GizmoShader =>
-            _gizmoShader != null ? _gizmoShader : (_gizmoShader =
+            gizmoShader != null ? gizmoShader : (gizmoShader =
                 Shader.Find("Unlit/Color")
                 ?? Shader.Find("Universal Render Pipeline/Unlit")
                 ?? Shader.Find("Sprites/Default")

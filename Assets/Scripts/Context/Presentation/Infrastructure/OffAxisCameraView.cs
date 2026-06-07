@@ -20,8 +20,8 @@ namespace Hcp.Presentation.Infrastructure
         public bool flipScreenUp = false;
         public bool enableOffAxis = true;
 
-        private Camera _cam;
-        private readonly OffAxisProjectionService _service = new OffAxisProjectionService();
+        private Camera cam;
+        private readonly OffAxisProjectionService service = new OffAxisProjectionService();
 
         public void Initialize(Transform screen, Transform eye, float width, float height, float near, float far)
         {
@@ -33,11 +33,11 @@ namespace Hcp.Presentation.Infrastructure
             farClip = far;
         }
 
-        private void OnEnable() => _cam = GetComponent<Camera>();
+        private void OnEnable() => cam = GetComponent<Camera>();
 
         private void LateUpdate()
         {
-            if (!enableOffAxis || _cam == null || screenCenter == null || eyeTransform == null)
+            if (!enableOffAxis || cam == null || screenCenter == null || eyeTransform == null)
                 return;
 
             var plane = new ScreenPlane(
@@ -48,20 +48,20 @@ namespace Hcp.Presentation.Infrastructure
                 screenWidth,
                 screenHeight);
 
-            var result = _service.Compute(eyeTransform.position, plane, nearClip, farClip, flipScreenRight, flipScreenUp);
+            var result = service.Compute(eyeTransform.position, plane, nearClip, farClip, flipScreenRight, flipScreenUp);
 
             if (!result.valid)
             {
-                _cam.ResetProjectionMatrix();
-                _cam.ResetWorldToCameraMatrix();
+                cam.ResetProjectionMatrix();
+                cam.ResetWorldToCameraMatrix();
                 return;
             }
 
-            _cam.worldToCameraMatrix = result.worldToCamera;
+            cam.worldToCameraMatrix = result.worldToCamera;
             // worldToCamera already follows Unity's left-handed convention (built via
             // Scale(1,1,-1) * worldToLocal) and the projection is the standard OpenGL-convention
             // off-center frustum; Unity converts it to the platform GPU matrix internally.
-            _cam.projectionMatrix = result.projection;
+            cam.projectionMatrix = result.projection;
         }
     }
 }

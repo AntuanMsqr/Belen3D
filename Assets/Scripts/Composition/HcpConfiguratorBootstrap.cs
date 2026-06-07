@@ -21,11 +21,11 @@ namespace Hcp.Composition
         // Editor visuals (proxy + gizmo) live on this layer so the preview camera excludes them.
         private const int EditorLayer = 30;
 
-        private SpatialLayoutService _service;
-        private Transform _screenCenter;
-        private string _currentScene;
-        private Scene _refScene;
-        private bool _refLoaded;
+        private SpatialLayoutService service;
+        private Transform screenCenter;
+        private string currentScene;
+        private Scene refScene;
+        private bool refLoaded;
 
         private void Awake()
         {
@@ -54,7 +54,7 @@ namespace Hcp.Composition
             if (orbit == null) orbit = cam.gameObject.AddComponent<OrbitCameraView>();
             orbit.Initialize(Vector3.zero, 1.8f);
 
-            _screenCenter = new GameObject("ScreenCenter").transform;
+            screenCenter = new GameObject("ScreenCenter").transform;
 
             // Scene to edit: from the menu's "Editar" button, else the first in the catalog.
             string first = (sceneCatalog != null && sceneCatalog.scenes.Count > 0) ? sceneCatalog.scenes[0] : null;
@@ -66,8 +66,8 @@ namespace Hcp.Composition
             HcpSession.SceneToEdit = null;
             var seed = spatialConfig != null ? spatialConfig.ToSpatialLayout() : SpatialLayout.Defaults();
             ISpatialLayoutStore store = new JsonFileSpatialLayoutStore(first);
-            _service = new SpatialLayoutService(seed, store);
-            _currentScene = first;
+            service = new SpatialLayoutService(seed, store);
+            currentScene = first;
 
             // Preview camera: off-axis view from the user reference (what Play mode shows),
             // rendered to a RenderTexture and displayed bottom-left. Excludes editor visuals.
@@ -81,19 +81,19 @@ namespace Hcp.Composition
             pcam.cullingMask = ~(1 << EditorLayer);
             pcam.targetTexture = rt;
             var previewOff = pcamGO.AddComponent<OffAxisCameraView>();
-            previewOff.Initialize(_screenCenter, previewEye, seed.monitorWidth, seed.monitorHeight, 0.01f, 100f);
+            previewOff.Initialize(screenCenter, previewEye, seed.monitorWidth, seed.monitorHeight, 0.01f, 100f);
             previewOff.enableOffAxis = true;
 
             // Proxy (cube + markers) drives the monitor + preview eye/size; gizmo edits it.
             var proxyGO = new GameObject("SpatialProxy");
             var proxy = proxyGO.AddComponent<SpatialProxyView>();
             proxy.visualLayer = EditorLayer;
-            proxy.Initialize(_service, _screenCenter, previewOff, previewEye);
+            proxy.Initialize(service, screenCenter, previewOff, previewEye);
 
             var gizmoGO = new GameObject("SpatialGizmo");
             var gizmo = gizmoGO.AddComponent<RuntimeGizmoView>();
             gizmo.handleLayer = EditorLayer;
-            gizmo.Initialize(cam, _service, proxy);
+            gizmo.Initialize(cam, service, proxy);
 
             BuildPreview(rt);
 
@@ -104,7 +104,7 @@ namespace Hcp.Composition
                 uidoc.panelSettings = uiPanelSettings;
                 uidoc.visualTreeAsset = spatialEditorUxml;
                 var editor = editorGO.AddComponent<SpatialEditorView>();
-                editor.Initialize(_service, gizmo);
+                editor.Initialize(service, gizmo);
             }
 
             BuildSelector();
@@ -173,7 +173,7 @@ namespace Hcp.Composition
             box.Add(label);
 
             var dd = new DropdownField { choices = new System.Collections.Generic.List<string>(sceneCatalog.scenes) };
-            dd.index = string.IsNullOrEmpty(_currentScene) ? 0 : Mathf.Max(0, sceneCatalog.scenes.IndexOf(_currentScene));
+            dd.index = string.IsNullOrEmpty(currentScene) ? 0 : Mathf.Max(0, sceneCatalog.scenes.IndexOf(currentScene));
             dd.RegisterValueChangedCallback(e => SelectScene(e.newValue));
             box.Add(dd);
 
@@ -184,15 +184,15 @@ namespace Hcp.Composition
 
         private void SelectScene(string scene)
         {
-            if (string.IsNullOrEmpty(scene) || scene == _currentScene) return;
+            if (string.IsNullOrEmpty(scene) || scene == currentScene) return;
 
-            _service.Save(); // persist current scene's edits first
+            service.Save(); // persist current scene's edits first
 
             UnloadReference();
 
             var seed = spatialConfig != null ? spatialConfig.ToSpatialLayout() : SpatialLayout.Defaults();
-            _service.Rebind(new JsonFileSpatialLayoutStore(scene), seed);
-            _currentScene = scene;
+            service.Rebind(new JsonFileSpatialLayoutStore(scene), seed);
+            currentScene = scene;
 
             LoadReference(scene);
         }
@@ -203,17 +203,17 @@ namespace Hcp.Composition
             if (op == null) return; // scene not in build settings
             op.completed += _ =>
             {
-                _refScene = SceneManager.GetSceneByName(scene);
-                _refLoaded = _refScene.IsValid();
-                NeutralizeReference(_refScene);
+                refScene = SceneManager.GetSceneByName(scene);
+                refLoaded = refScene.IsValid();
+                NeutralizeReference(refScene);
             };
         }
 
         private void UnloadReference()
         {
-            if (_refLoaded && _refScene.IsValid())
-                SceneManager.UnloadSceneAsync(_refScene);
-            _refLoaded = false;
+            if (refLoaded && refScene.IsValid())
+                SceneManager.UnloadSceneAsync(refScene);
+            refLoaded = false;
         }
 
         // Disable anything in the reference scene that would fight the configurator:

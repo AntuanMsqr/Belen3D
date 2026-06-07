@@ -8,56 +8,56 @@ namespace Hcp.Narrative.Infrastructure
     {
         public float fadeDuration = 2.0f;
 
-        private AudioSource _a;
-        private AudioSource _b;
-        private AudioSource _active;
-        private float _fadeTime;
-        private bool _isFading;
+        private AudioSource a;
+        private AudioSource b;
+        private AudioSource active;
+        private float fadeTime;
+        private bool isFading;
 
         private void Awake()
         {
-            _a = GetComponent<AudioSource>();
-            _a.playOnAwake = false;
-            _a.loop = true;
-            _b = gameObject.AddComponent<AudioSource>();
-            _b.playOnAwake = false;
-            _b.loop = true;
-            _active = _a;
+            a = GetComponent<AudioSource>();
+            a.playOnAwake = false;
+            a.loop = true;
+            b = gameObject.AddComponent<AudioSource>();
+            b.playOnAwake = false;
+            b.loop = true;
+            active = a;
         }
 
         public void PlayImmediate(AudioClip clip, float volume = 1f)
         {
-            _a.Stop(); _b.Stop();
-            _active = _a;
-            _a.clip = clip; _a.volume = volume; _a.Play();
-            _b.clip = null; _b.volume = 0f;
-            _isFading = false; _fadeTime = 0f;
+            a.Stop(); b.Stop();
+            active = a;
+            a.clip = clip; a.volume = volume; a.Play();
+            b.clip = null; b.volume = 0f;
+            isFading = false; fadeTime = 0f;
         }
 
         public void CrossfadeTo(AudioClip clip, float volume = 1f)
         {
-            var next = _active == _a ? _b : _a;
+            var next = active == a ? b : a;
             next.clip = clip;
             next.volume = 0f;
             next.Play();
-            _isFading = true;
-            _fadeTime = 0f;
+            isFading = true;
+            fadeTime = 0f;
         }
 
         private void Update()
         {
-            if (!_isFading) return;
-            _fadeTime += Time.deltaTime;
-            float t = Mathf.Clamp01(_fadeTime / Mathf.Max(0.01f, fadeDuration));
-            var from = _active;
-            var to = _active == _a ? _b : _a;
+            if (!isFading) return;
+            fadeTime += Time.deltaTime;
+            float t = Mathf.Clamp01(fadeTime / Mathf.Max(0.01f, fadeDuration));
+            var from = active;
+            var to = active == a ? b : a;
             to.volume = t;
             from.volume = 1f - t;
             if (t >= 1f)
             {
                 from.Stop();
-                _active = to;
-                _isFading = false;
+                active = to;
+                isFading = false;
             }
         }
     }

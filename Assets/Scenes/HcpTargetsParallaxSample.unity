@@ -128,8 +128,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 52015395}
-  - component: {fileID: 52015394}
-  - component: {fileID: 52015393}
   m_Layer: 0
   m_Name: DebugUI
   m_TagString: Untagged
@@ -137,43 +135,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &52015393
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 52015392}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bd2818da524d4bb4fa8dcf72ba279175, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Belen.DebugUI.CalibrationAutoSaver
-  tracker: {fileID: 1403573956}
-  offAxis: {fileID: 0}
-  saveDelay: 1
---- !u!114 &52015394
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 52015392}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 75f25b5d0b621f1499c763f63afa003d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Belen.DebugUI.CalibrationPanel
-  toggleKey: 282
-  toggleSourceKey: 283
-  visible: 1
-  tracker: {fileID: 1403573956}
-  sourceBehaviour: {fileID: 1439014632}
-  offAxis: {fileID: 446544274}
-  simpleParallax: {fileID: 446544273}
-  simpleParallaxOnly: 1
-  openSeeSource: {fileID: 0}
-  keyboardSource: {fileID: 0}
 --- !u!4 &52015395
 Transform:
   m_ObjectHideFlags: 0
@@ -832,8 +793,6 @@ GameObject:
   m_Component:
   - component: {fileID: 446544272}
   - component: {fileID: 446544275}
-  - component: {fileID: 446544274}
-  - component: {fileID: 446544273}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -856,57 +815,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 840497762}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &446544273
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 446544271}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ca725d7bce7b9944d93964d37b1e880e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Belen.Rendering.SimpleParallaxCamera
-  screenCenter: {fileID: 318852622}
-  eyeTransform: {fileID: 840497762}
-  gainXY: {x: 1, y: 1}
-  invertX: 0
-  invertY: 0
-  useZ: 1
-  zGain: 1
-  clampX: {x: -0.5, y: 0.5}
-  clampY: {x: -0.3, y: 0.3}
-  clampZ: {x: 0.2, y: 3}
-  focusDepth: 2
-  smooth: 1
-  posSmoothTimeXY: 0.12
-  posSmoothTimeZ: 0.18
-  rotSmoothTime: 0.12
-  deadzoneX: 0.003
-  deadzoneY: 0.003
---- !u!114 &446544274
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 446544271}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f5235b94cda934148b64fab6e960ae37, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Belen.Rendering.OffAxisCamera
-  screenCenter: {fileID: 318852622}
-  flipScreenUp: 0
-  flipScreenRight: 0
-  screenWidth: 0.6
-  screenHeight: 0.34
-  eyeTransform: {fileID: 840497762}
-  nearClip: 0.01
-  farClip: 100
-  overrideCameraMatrices: 0
-  drawGizmos: 1
 --- !u!20 &446544275
 Camera:
   m_ObjectHideFlags: 0
@@ -2769,7 +2677,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1403573957}
-  - component: {fileID: 1403573956}
   m_Layer: 0
   m_Name: FaceTrackerManager
   m_TagString: Untagged
@@ -2777,50 +2684,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1403573956
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1403573955}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b28abd7c96b2da144a2299906d248082, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Belen.Tracking.FaceTrackerManager
-  sourceBehaviour: {fileID: 1439014632}
-  cameraPivot: {fileID: 840497762}
-  applyHeadRotation: 0
-  positionOffset: {x: 0, y: 0, z: 0}
-  rotationOffset: {x: 0, y: 0, z: 0}
-  useDistanceGain: 0
-  neutralZ: 0.6
-  distanceGain: 1
-  zClamp: {x: 0.2, y: 2}
-  autoNeutral: 0
-  autoNeutralDuration: 2
-  snapNeutralOnStart: 1
-  motionMode: 0
-  orbitTarget: {fileID: 0}
-  orbitBaseDistance: 1.2
-  yawDegreesPerMeter: 400
-  pitchDegreesPerMeter: 400
-  dollyMetersPerMeter: 1
-  pitchClamp: {x: -45, y: 45}
-  distanceClamp: {x: 0.3, y: 3}
-  neutralXY: {x: 0, y: 0}
-  orbitKeepHorizon: 1
-  yawClamp: {x: -60, y: 60}
-  deadzoneX: 0.02
-  deadzoneY: 0.02
-  responseExponent: 1
-  orbitSmoothTime: 0.12
-  compositionOffsetDeg: {x: 0, y: 0}
-  applyOrbitStartOnEnable: 1
-  orbitStartYaw: 0
-  orbitStartPitch: 0
-  orbitStartDistance: 1.2
 --- !u!4 &1403573957
 Transform:
   m_ObjectHideFlags: 0
@@ -2881,7 +2744,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1439014634}
   - component: {fileID: 1439014633}
-  - component: {fileID: 1439014632}
   m_Layer: 0
   m_Name: OpenSeeReceiver
   m_TagString: Untagged
@@ -2889,33 +2751,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1439014632
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1439014631}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2adff59a7537a94458b81601fbc7917f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Belen.Tracking.Sources.OpenSeeFaceBoxSource
-  openSee: {fileID: 1439014633}
-  faceId: 0
-  widthMeters: 0.6
-  heightMeters: 0.34
-  neutralDepthMeters: 0.6
-  neutralFacePixels: 0
-  zBlend: 0.85
-  zClamp: {x: 0.2, y: 2.5}
-  zSmoothTime: 0.16
-  autoNeutral: 1
-  autoNeutralDuration: 1
-  faceSizeClamp01: {x: 0.06, y: 0.6}
-  use3DZFallback: 1
-  invertX: 0
-  invertY: 0
 --- !u!114 &1439014633
 MonoBehaviour:
   m_ObjectHideFlags: 0

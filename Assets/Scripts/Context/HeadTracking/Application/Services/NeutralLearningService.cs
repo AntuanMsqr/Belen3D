@@ -8,72 +8,72 @@ namespace Hcp.HeadTracking.Application
     // (autoNeutral) or snap to the first stable pose (snapNeutralOnStart).
     public sealed class NeutralLearningService
     {
-        private readonly IClock _clock;
+        private readonly IClock clock;
 
-        private bool _learning;
-        private bool _snapped;
-        private double _startTs;
-        private float _sumX, _sumY, _sumZ;
-        private int _count;
+        private bool learning;
+        private bool snapped;
+        private double startTs;
+        private float sumX, sumY, sumZ;
+        private int count;
 
-        public bool IsLearning => _learning;
+        public bool IsLearning => learning;
 
         public NeutralLearningService(IClock clock)
         {
-            _clock = clock;
+            this.clock = clock;
         }
 
         public void Reset()
         {
-            _learning = false;
-            _snapped = false;
-            _count = 0;
-            _sumX = _sumY = _sumZ = 0f;
+            learning = false;
+            snapped = false;
+            count = 0;
+            sumX = sumY = sumZ = 0f;
         }
 
         public void Process(in HeadPose filtered, ref CalibrationData cal)
         {
-            if (cal.autoNeutral && !_learning)
+            if (cal.autoNeutral && !learning)
             {
                 Begin();
             }
 
-            if (_learning)
+            if (learning)
             {
                 Accumulate(filtered, ref cal);
             }
-            else if (cal.snapNeutralOnStart && !_snapped)
+            else if (cal.snapNeutralOnStart && !snapped)
             {
                 cal.neutralZ = filtered.position.z;
                 cal.neutralXY = new Vector2(filtered.position.x, filtered.position.y);
                 cal.neutralEuler = filtered.eulerDegrees;
-                _snapped = true;
+                snapped = true;
             }
         }
 
         private void Begin()
         {
-            _learning = true;
-            _sumX = _sumY = _sumZ = 0f;
-            _count = 0;
-            _startTs = _clock.NowSeconds;
-            _snapped = true; // prevent snap once auto-learning has started
+            learning = true;
+            sumX = sumY = sumZ = 0f;
+            count = 0;
+            startTs = clock.NowSeconds;
+            snapped = true; // prevent snap once auto-learning has started
         }
 
         private void Accumulate(in HeadPose pose, ref CalibrationData cal)
         {
-            if (_count == 0) _startTs = _clock.NowSeconds;
-            _sumX += pose.position.x;
-            _sumY += pose.position.y;
-            _sumZ += pose.position.z;
-            _count++;
+            if (count == 0) startTs = clock.NowSeconds;
+            sumX += pose.position.x;
+            sumY += pose.position.y;
+            sumZ += pose.position.z;
+            count++;
 
-            if (_clock.NowSeconds - _startTs >= Mathf.Max(0.1f, cal.autoNeutralDuration))
+            if (clock.NowSeconds - startTs >= Mathf.Max(0.1f, cal.autoNeutralDuration))
             {
-                float denom = Mathf.Max(1, _count);
-                cal.neutralZ = _sumZ / denom;
-                cal.neutralXY = new Vector2(_sumX / denom, _sumY / denom);
-                _learning = false;
+                float denom = Mathf.Max(1, count);
+                cal.neutralZ = sumZ / denom;
+                cal.neutralXY = new Vector2(sumX / denom, sumY / denom);
+                learning = false;
             }
         }
     }

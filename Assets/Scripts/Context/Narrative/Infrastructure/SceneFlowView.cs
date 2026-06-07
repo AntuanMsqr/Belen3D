@@ -20,20 +20,20 @@ namespace Hcp.Narrative.Infrastructure
         public SceneDef[] scenes = new SceneDef[0];
         public AudioCrossfaderView crossfader;
 
-        private NarrativeService _service;
+        private NarrativeService service;
 
         private void Start()
         {
             var durations = new float[scenes.Length];
             for (int i = 0; i < scenes.Length; i++)
                 durations[i] = Mathf.Max(1f, scenes[i]?.duration ?? 22f);
-            _service = new NarrativeService(durations);
+            service = new NarrativeService(durations);
         }
 
         private void Update()
         {
-            if (_service == null || scenes.Length == 0) return;
-            if (_service.Tick(Time.deltaTime, out int index, out bool isFirst))
+            if (service == null || scenes.Length == 0) return;
+            if (service.Tick(Time.deltaTime, out int index, out bool isFirst))
             {
                 Activate(index);
                 var def = scenes[index];

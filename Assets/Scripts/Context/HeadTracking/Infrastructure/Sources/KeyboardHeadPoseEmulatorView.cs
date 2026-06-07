@@ -19,8 +19,8 @@ namespace Hcp.HeadTracking.Infrastructure
         public float rotSpeed = 30f;
 
         public event Action<HeadPose> OnPose;
-        private HeadPose _latest;
-        private bool _dirty;
+        private HeadPose latest;
+        private bool dirty;
 
         private void Update()
         {
@@ -65,26 +65,26 @@ namespace Hcp.HeadTracking.Infrastructure
             if (delta.sqrMagnitude > 0)
             {
                 position += delta.normalized * moveSpeed * dt;
-                _dirty = true;
+                dirty = true;
             }
 
             if (rdelta.sqrMagnitude > 0)
             {
                 euler += rdelta * rotSpeed * dt;
-                _dirty = true;
+                dirty = true;
             }
 
-            if (_dirty)
+            if (dirty)
             {
-                _dirty = false;
-                _latest = new HeadPose(position, euler, Time.realtimeSinceStartupAsDouble);
-                OnPose?.Invoke(_latest);
+                dirty = false;
+                latest = new HeadPose(position, euler, Time.realtimeSinceStartupAsDouble);
+                OnPose?.Invoke(latest);
             }
         }
 
         public bool TryGetLatest(out HeadPose pose)
         {
-            pose = _latest;
+            pose = latest;
             return true;
         }
 

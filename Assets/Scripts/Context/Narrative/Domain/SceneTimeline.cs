@@ -5,41 +5,41 @@ namespace Hcp.Narrative.Domain
     // Pure tableau timeline: cycles through N scenes by duration. No engine services.
     public sealed class SceneTimeline
     {
-        private readonly float[] _durations;
-        private int _index;
-        private float _elapsed;
-        private bool _started;
+        private readonly float[] durations;
+        private int index;
+        private float elapsed;
+        private bool started;
 
-        public int CurrentIndex => _index;
-        public int Count => _durations?.Length ?? 0;
+        public int CurrentIndex => index;
+        public int Count => durations?.Length ?? 0;
 
         public SceneTimeline(float[] durations)
         {
-            _durations = durations;
+            this.durations = durations;
         }
 
         // Returns true when a scene becomes active (first activation or after a duration elapses).
         public bool Tick(float deltaTime, out int index, out bool isFirst)
         {
-            index = _index;
+            index = this.index;
             isFirst = false;
-            if (_durations == null || _durations.Length == 0) return false;
+            if (durations == null || durations.Length == 0) return false;
 
-            if (!_started)
+            if (!started)
             {
-                _started = true;
-                _elapsed = 0f;
+                started = true;
+                elapsed = 0f;
                 isFirst = true;
-                index = _index;
+                index = this.index;
                 return true;
             }
 
-            _elapsed += deltaTime;
-            if (_elapsed >= Mathf.Max(1f, _durations[_index]))
+            elapsed += deltaTime;
+            if (elapsed >= Mathf.Max(1f, durations[this.index]))
             {
-                _elapsed = 0f;
-                _index = (_index + 1) % _durations.Length;
-                index = _index;
+                elapsed = 0f;
+                this.index = (this.index + 1) % durations.Length;
+                index = this.index;
                 return true;
             }
             return false;

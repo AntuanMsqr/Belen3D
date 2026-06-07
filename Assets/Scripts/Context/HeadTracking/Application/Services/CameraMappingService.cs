@@ -7,17 +7,17 @@ namespace Hcp.HeadTracking.Application
     // Holds the orbit smoothing state that used to live on FaceTrackerManager.
     public sealed class CameraMappingService
     {
-        private float _yawCur, _pitchCur, _distCur;
-        private float _yawVel, _pitchVel, _distVel;
+        private float yawCur, pitchCur, distCur;
+        private float yawVel, pitchVel, distVel;
 
         // Reproduces FaceTrackerManager.applyOrbitStartOnEnable initialization.
         public void ResetOrbit(in CalibrationData cal)
         {
-            _yawCur = cal.orbitStartYaw;
-            _pitchCur = cal.orbitStartPitch;
-            _distCur = Mathf.Clamp(cal.orbitStartDistance > 0 ? cal.orbitStartDistance : cal.orbitBaseDistance,
+            yawCur = cal.orbitStartYaw;
+            pitchCur = cal.orbitStartPitch;
+            distCur = Mathf.Clamp(cal.orbitStartDistance > 0 ? cal.orbitStartDistance : cal.orbitBaseDistance,
                                    cal.distanceClamp.x, cal.distanceClamp.y);
-            _yawVel = _pitchVel = _distVel = 0f;
+            yawVel = pitchVel = distVel = 0f;
         }
 
         public CameraTarget Map(in HeadPose pose, in CalibrationData cal, float deltaTime)
@@ -68,12 +68,12 @@ namespace Hcp.HeadTracking.Application
 
             float smooth = cal.orbitSmoothTime;
             // Pass deltaTime explicitly: the default overload would read UnityEngine.Time, banned in Application.
-            _yawCur = Mathf.SmoothDampAngle(_yawCur, yawTarget, ref _yawVel, smooth, Mathf.Infinity, deltaTime);
-            _pitchCur = Mathf.SmoothDampAngle(_pitchCur, pitchTarget, ref _pitchVel, smooth, Mathf.Infinity, deltaTime);
-            float distStart = _distCur <= 0 ? distTarget : _distCur;
-            _distCur = Mathf.SmoothDamp(distStart, distTarget, ref _distVel, smooth, Mathf.Infinity, deltaTime);
+            yawCur = Mathf.SmoothDampAngle(yawCur, yawTarget, ref yawVel, smooth, Mathf.Infinity, deltaTime);
+            pitchCur = Mathf.SmoothDampAngle(pitchCur, pitchTarget, ref pitchVel, smooth, Mathf.Infinity, deltaTime);
+            float distStart = distCur <= 0 ? distTarget : distCur;
+            distCur = Mathf.SmoothDamp(distStart, distTarget, ref distVel, smooth, Mathf.Infinity, deltaTime);
 
-            return CameraTarget.Orbit(_yawCur, _pitchCur, _distCur, cal.orbitKeepHorizon);
+            return CameraTarget.Orbit(yawCur, pitchCur, distCur, cal.orbitKeepHorizon);
         }
 
         private static float ApplyDeadzone(float v, float dz)

@@ -3,33 +3,80 @@
     <ui:VisualElement name="spatial-root" class="spatial-root">
         <ui:Label text="Editor espacial — HCP" class="spatial-title" />
 
-        <ui:Label text="Sel: —" name="label-selection" class="spatial-section" />
-        <ui:VisualElement class="spatial-row">
-            <ui:Button text="Mover" name="btn-move" class="spatial-btn" />
-            <ui:Button text="Rotar" name="btn-rotate" class="spatial-btn" />
-            <ui:Button text="Escalar" name="btn-scale" class="spatial-btn" />
+        <ui:ScrollView name="spatial-scroll" class="spatial-scroll" mode="Vertical" horizontal-scroller-visibility="Hidden">
+            <ui:VisualElement class="spatial-card">
+                <ui:Label text="Sel: —" name="label-selection" class="spatial-section" />
+                <ui:VisualElement class="spatial-row spatial-segment">
+                    <ui:Button text="Mover" name="btn-move" class="spatial-btn" />
+                    <ui:Button text="Rotar" name="btn-rotate" class="spatial-btn" />
+                    <ui:Button text="Escalar" name="btn-scale" class="spatial-btn" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+
+            <ui:VisualElement class="spatial-card">
+                <ui:Label text="Monitor" name="sec-monitor" class="spatial-section spatial-section--pick" />
+                <ui:FloatField label="Ancho (m)" name="field-width" />
+                <ui:FloatField label="Alto (m)" name="field-height" />
+                <ui:VisualElement class="vec-row">
+                    <ui:Label text="Posición" class="vec-row__label" />
+                    <ui:VisualElement class="vec-row__axes">
+                        <ui:FloatField label="X" name="field-mon-pos-x" class="axis axis-x" />
+                        <ui:FloatField label="Y" name="field-mon-pos-y" class="axis axis-y" />
+                        <ui:FloatField label="Z" name="field-mon-pos-z" class="axis axis-z" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement class="vec-row">
+                    <ui:Label text="Rotación" class="vec-row__label" />
+                    <ui:VisualElement class="vec-row__axes">
+                        <ui:FloatField label="X" name="field-mon-rot-x" class="axis axis-x" />
+                        <ui:FloatField label="Y" name="field-mon-rot-y" class="axis axis-y" />
+                        <ui:FloatField label="Z" name="field-mon-rot-z" class="axis axis-z" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:VisualElement>
+
+            <ui:VisualElement class="spatial-card">
+                <ui:Label text="Cámara" name="sec-camera" class="spatial-section spatial-section--pick" />
+                <ui:DropdownField label="Activa" name="field-cam-index" />
+                <ui:VisualElement class="vec-row">
+                    <ui:Label text="Offset pos." class="vec-row__label" />
+                    <ui:VisualElement class="vec-row__axes">
+                        <ui:FloatField label="X" name="field-cam-pos-x" class="axis axis-x" />
+                        <ui:FloatField label="Y" name="field-cam-pos-y" class="axis axis-y" />
+                        <ui:FloatField label="Z" name="field-cam-pos-z" class="axis axis-z" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement class="vec-row">
+                    <ui:Label text="Offset rot." class="vec-row__label" />
+                    <ui:VisualElement class="vec-row__axes">
+                        <ui:FloatField label="X" name="field-cam-rot-x" class="axis axis-x" />
+                        <ui:FloatField label="Y" name="field-cam-rot-y" class="axis axis-y" />
+                        <ui:FloatField label="Z" name="field-cam-rot-z" class="axis axis-z" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:Button text="+ Añadir cámara" name="btn-add-cam" class="spatial-btn spatial-btn-ghost" />
+            </ui:VisualElement>
+
+            <ui:VisualElement class="spatial-card">
+                <ui:Label text="Usuario" name="sec-user" class="spatial-section spatial-section--pick" />
+                <ui:VisualElement class="vec-row">
+                    <ui:Label text="Posición ref." class="vec-row__label" />
+                    <ui:VisualElement class="vec-row__axes">
+                        <ui:FloatField label="X" name="field-user-pos-x" class="axis axis-x" />
+                        <ui:FloatField label="Y" name="field-user-pos-y" class="axis axis-y" />
+                        <ui:FloatField label="Z" name="field-user-pos-z" class="axis axis-z" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:FloatField label="Distancia (m)" name="field-user-dist" />
+            </ui:VisualElement>
+        </ui:ScrollView>
+
+        <ui:VisualElement name="spatial-footer" class="spatial-footer">
+            <ui:VisualElement name="spatial-row" class="spatial-row">
+                <ui:Button text="Guardar" name="btn-save" class="spatial-btn spatial-btn-primary" />
+                <ui:Button text="Reset" name="btn-reset" class="spatial-btn spatial-btn-ghost" />
+            </ui:VisualElement>
+            <ui:Label text="Click=seleccionar · click vacío=deselec · arrastra gizmos · W/E/R modo · F2 ocultar · Esc menú" class="spatial-hint" />
         </ui:VisualElement>
-
-        <ui:Label text="Monitor" class="spatial-section" />
-        <ui:FloatField label="Ancho (m)" name="field-width" />
-        <ui:FloatField label="Alto (m)" name="field-height" />
-        <ui:Vector3Field label="Posición" name="field-mon-pos" />
-        <ui:Vector3Field label="Rotación" name="field-mon-rot" />
-
-        <ui:Label text="Cámara" class="spatial-section" />
-        <ui:DropdownField label="Activa" name="field-cam-index" />
-        <ui:Vector3Field label="Offset pos." name="field-cam-pos" />
-        <ui:Vector3Field label="Offset rot." name="field-cam-rot" />
-        <ui:Button text="+ Añadir cámara" name="btn-add-cam" class="spatial-btn" />
-
-        <ui:Label text="Usuario" class="spatial-section" />
-        <ui:Vector3Field label="Posición ref." name="field-user-pos" />
-        <ui:FloatField label="Distancia (m)" name="field-user-dist" />
-
-        <ui:VisualElement name="spatial-row" class="spatial-row">
-            <ui:Button text="Guardar" name="btn-save" class="spatial-btn" />
-            <ui:Button text="Reset" name="btn-reset" class="spatial-btn" />
-        </ui:VisualElement>
-        <ui:Label text="Click=seleccionar · click vacío=deselec · arrastra gizmos · W/E/R modo · F2 ocultar · Esc menú" class="spatial-hint" />
     </ui:VisualElement>
 </ui:UXML>

@@ -9,31 +9,31 @@ namespace Hcp.HeadTracking.Application
         public float positionAlpha = 0.2f; // 0..1 (lower = more smoothing)
         public float rotationAlpha = 0.2f; // 0..1
 
-        private bool _hasState;
-        private Vector3 _pos;
-        private Vector3 _euler;
-        private double _ts;
+        private bool hasState;
+        private Vector3 pos;
+        private Vector3 euler;
+        private double ts;
 
         public void Reset()
         {
-            _hasState = false;
+            hasState = false;
         }
 
         public HeadPose Filter(HeadPose input)
         {
-            if (!_hasState)
+            if (!hasState)
             {
-                _pos = input.position;
-                _euler = input.eulerDegrees;
-                _ts = input.timestamp;
-                _hasState = true;
+                pos = input.position;
+                euler = input.eulerDegrees;
+                ts = input.timestamp;
+                hasState = true;
                 return input;
             }
 
-            _pos = Vector3.Lerp(_pos, input.position, Mathf.Clamp01(positionAlpha));
-            _euler = Vector3.Lerp(_euler, input.eulerDegrees, Mathf.Clamp01(rotationAlpha));
-            _ts = input.timestamp;
-            return new HeadPose(_pos, _euler, _ts);
+            pos = Vector3.Lerp(pos, input.position, Mathf.Clamp01(positionAlpha));
+            euler = Vector3.Lerp(euler, input.eulerDegrees, Mathf.Clamp01(rotationAlpha));
+            ts = input.timestamp;
+            return new HeadPose(pos, euler, ts);
         }
     }
 }
