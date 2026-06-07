@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 17b01091db678264c874a8ef7ac444e1, type: 3}
   m_Name: HeadTrackingConfig
-  m_EditorClassIdentifier: Belen.HeadTracking.Infrastructure::Belen.HeadTracking.Infrastructure.HeadTrackingConfig
+  m_EditorClassIdentifier: Hcp.HeadTracking.Infrastructure::Hcp.HeadTracking.Infrastructure.HeadTrackingConfig
   source: 0
   openSeeListenAddress: 127.0.0.1
   openSeeListenPort: 11573
@@ -25,7 +25,7 @@ MonoBehaviour:
   trackerShowWindow: 1
   motionMode: 0
   applyHeadRotation: 1
-  positionOffset: {x: 0, y: 0.2, z: 0.6}
+  positionOffset: {x: 0, y: 0, z: 0.6}
   rotationOffset: {x: 0, y: 180, z: 0}
   positionAlpha: 0.1
   rotationAlpha: 0.12

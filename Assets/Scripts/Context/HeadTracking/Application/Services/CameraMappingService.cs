@@ -1,7 +1,7 @@
 using UnityEngine;
-using Belen.HeadTracking.Domain;
+using Hcp.HeadTracking.Domain;
 
-namespace Belen.HeadTracking.Application
+namespace Hcp.HeadTracking.Application
 {
     // Maps a filtered head pose to a CameraTarget (plain data — never a Transform).
     // Holds the orbit smoothing state that used to live on FaceTrackerManager.

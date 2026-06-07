@@ -1,9 +1,9 @@
 using System;
 using UnityEngine;
 using OpenSee;
-using Belen.HeadTracking.Domain;
+using Hcp.HeadTracking.Domain;
 
-namespace Belen.HeadTracking.Infrastructure
+namespace Hcp.HeadTracking.Infrastructure
 {
     // Generates head pose from the 2D face box only (no rotation):
     // XY from face centroid in image space; Z from face size vs neutral.

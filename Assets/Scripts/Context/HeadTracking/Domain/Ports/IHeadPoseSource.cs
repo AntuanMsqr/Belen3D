@@ -1,6 +1,6 @@
 using System;
 
-namespace Belen.HeadTracking.Domain
+namespace Hcp.HeadTracking.Domain
 {
     // Port: a source of head poses (tracker, UDP, keyboard emulator, ...).
     public interface IHeadPoseSource

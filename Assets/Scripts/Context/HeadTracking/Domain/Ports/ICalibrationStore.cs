@@ -1,4 +1,4 @@
-namespace Belen.HeadTracking.Domain
+namespace Hcp.HeadTracking.Domain
 {
     // Port: persistence for calibration/tuning. Implemented in Infrastructure
     // (e.g. PlayerPrefs) so Application never touches engine storage APIs.

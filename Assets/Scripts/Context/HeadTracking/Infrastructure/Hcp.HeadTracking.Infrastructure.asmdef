@@ -1,0 +1,19 @@
+{
+    "name": "Hcp.HeadTracking.Infrastructure",
+    "rootNamespace": "Hcp.HeadTracking.Infrastructure",
+    "references": [
+        "Hcp.HeadTracking.Domain",
+        "Hcp.HeadTracking.Application",
+        "OpenSee",
+        "Unity.InputSystem"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

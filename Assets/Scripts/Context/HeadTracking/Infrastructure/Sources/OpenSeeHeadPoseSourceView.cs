@@ -1,9 +1,9 @@
 using System;
 using UnityEngine;
 using OpenSee;
-using Belen.HeadTracking.Domain;
+using Hcp.HeadTracking.Domain;
 
-namespace Belen.HeadTracking.Infrastructure
+namespace Hcp.HeadTracking.Infrastructure
 {
     // Adapts OpenSee (OpenSeeFace Unity receiver) to IHeadPoseSource.
     public class OpenSeeHeadPoseSourceView : MonoBehaviour, IHeadPoseSource

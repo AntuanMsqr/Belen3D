@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Belen.Narrative.Infrastructure
+namespace Hcp.Narrative.Infrastructure
 {
     // Crossfades between ambient tracks using two AudioSources. View (Infra).
     [RequireComponent(typeof(AudioSource))]

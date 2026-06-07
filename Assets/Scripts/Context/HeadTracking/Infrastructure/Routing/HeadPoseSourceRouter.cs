@@ -1,8 +1,8 @@
 using UnityEngine;
-using Belen.HeadTracking.Domain;
-using Belen.HeadTracking.Application;
+using Hcp.HeadTracking.Domain;
+using Hcp.HeadTracking.Application;
 
-namespace Belen.HeadTracking.Infrastructure
+namespace Hcp.HeadTracking.Infrastructure
 {
     // Resolves which IHeadPoseSource adapter to use for a given SourceKind, attaching the
     // matching View component to the host GameObject. Plain class (Router lives in Infra).

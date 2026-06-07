@@ -1,11 +1,11 @@
 using System;
 using UnityEngine;
-using Belen.HeadTracking.Domain;
+using Hcp.HeadTracking.Domain;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
 
-namespace Belen.HeadTracking.Infrastructure
+namespace Hcp.HeadTracking.Infrastructure
 {
     // Fallback input using keyboard for quick testing without a tracker.
     public class KeyboardHeadPoseEmulatorView : MonoBehaviour, IHeadPoseSource

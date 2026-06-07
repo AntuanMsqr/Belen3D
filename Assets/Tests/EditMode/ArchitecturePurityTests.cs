@@ -3,7 +3,7 @@ using System.Linq;
 using System.Reflection;
 using NUnit.Framework;
 
-namespace Belen.Architecture.Tests
+namespace Hcp.Architecture.Tests
 {
     // Enforces the hexagonal rule: Domain/Application layers must not depend on Unity
     // engine *services*. Value-type math (Vector3, Mathf, Quaternion, Matrix4x4) is allowed,
@@ -17,12 +17,12 @@ namespace Belen.Architecture.Tests
     {
         private static readonly string[] PureAssemblies =
         {
-            "Belen.HeadTracking.Domain",
-            "Belen.HeadTracking.Application",
-            "Belen.Presentation.Domain",
-            "Belen.Presentation.Application",
-            "Belen.Narrative.Domain",
-            "Belen.Narrative.Application",
+            "Hcp.HeadTracking.Domain",
+            "Hcp.HeadTracking.Application",
+            "Hcp.Presentation.Domain",
+            "Hcp.Presentation.Application",
+            "Hcp.Narrative.Domain",
+            "Hcp.Narrative.Application",
         };
 
         [Test]

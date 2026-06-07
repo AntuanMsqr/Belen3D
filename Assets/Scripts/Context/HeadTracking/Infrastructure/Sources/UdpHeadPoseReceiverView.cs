@@ -4,9 +4,9 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using UnityEngine;
-using Belen.HeadTracking.Domain;
+using Hcp.HeadTracking.Domain;
 
-namespace Belen.HeadTracking.Infrastructure
+namespace Hcp.HeadTracking.Infrastructure
 {
     // Lightweight UDP receiver for JSON or CSV head pose packets.
     // JSON: {"pos":[x,y,z],"rot":[pitch,yaw,roll],"ts":seconds}  |  CSV: x,y,z,pitch,yaw,roll,ts

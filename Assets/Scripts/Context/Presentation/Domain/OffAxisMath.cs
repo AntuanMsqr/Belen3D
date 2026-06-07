@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Belen.Presentation.Domain
+namespace Hcp.Presentation.Domain
 {
     // Pure off-axis (Head-Coupled Perspective) projection math.
     // Ported from the legacy OffAxisCamera; no engine services, only value-type math.

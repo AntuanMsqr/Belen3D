@@ -1,7 +1,7 @@
 using UnityEngine;
-using Belen.HeadTracking.Domain;
+using Hcp.HeadTracking.Domain;
 
-namespace Belen.HeadTracking.Application
+namespace Hcp.HeadTracking.Application
 {
     // Simple exponential smoothing for head pose (per-axis alpha).
     public class HeadPoseExponentialFilter

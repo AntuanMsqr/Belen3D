@@ -1,7 +1,7 @@
 using UnityEngine;
-using Belen.HeadTracking.Domain;
+using Hcp.HeadTracking.Domain;
 
-namespace Belen.HeadTracking.Application
+namespace Hcp.HeadTracking.Application
 {
     // Learns the neutral head position used as the orbit/parallax origin.
     // Mirrors the legacy FaceTrackerManager behavior: either average over a window

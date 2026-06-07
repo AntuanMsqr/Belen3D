@@ -1,8 +1,8 @@
 using UnityEngine;
-using Belen.Presentation.Domain;
-using Belen.Presentation.Application;
+using Hcp.Presentation.Domain;
+using Hcp.Presentation.Application;
 
-namespace Belen.Presentation.Infrastructure
+namespace Hcp.Presentation.Infrastructure
 {
     // View: applies off-axis (HCP) matrices to a Camera each LateUpdate.
     // Assembles a ScreenPlane from the screenCenter Transform, calls the Application

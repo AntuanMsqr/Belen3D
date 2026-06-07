@@ -1,11 +1,11 @@
 using UnityEngine;
 using UnityEngine.UIElements;
-using Belen.HeadTracking.Application;
+using Hcp.HeadTracking.Application;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
 
-namespace Belen.Diagnostics.Infrastructure
+namespace Hcp.Diagnostics.Infrastructure
 {
     // UI Toolkit read-only overlay: head position, distance to screen, motion mode, FPS.
     // Toggle with F1.

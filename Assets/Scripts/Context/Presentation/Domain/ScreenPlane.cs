@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Belen.Presentation.Domain
+namespace Hcp.Presentation.Domain
 {
     // Physical screen plane in world space: a center, right/up basis, and metric size.
     public readonly struct ScreenPlane

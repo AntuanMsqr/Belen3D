@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Belen.HeadTracking.Domain
+namespace Hcp.HeadTracking.Domain
 {
     // Plain, mutable tuning + calibration state for head tracking.
     // Mirrors every field that the legacy FaceTrackerManager persisted to PlayerPrefs,

@@ -1,0 +1,29 @@
+{
+    "name": "Hcp.Architecture.Tests",
+    "rootNamespace": "Hcp.Architecture.Tests",
+    "references": [
+        "Hcp.HeadTracking.Domain",
+        "Hcp.HeadTracking.Application",
+        "Hcp.Presentation.Domain",
+        "Hcp.Presentation.Application",
+        "Hcp.Narrative.Domain",
+        "Hcp.Narrative.Application",
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

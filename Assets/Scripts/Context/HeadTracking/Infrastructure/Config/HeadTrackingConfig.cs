@@ -1,12 +1,12 @@
 using UnityEngine;
-using Belen.HeadTracking.Domain;
-using Belen.HeadTracking.Application;
+using Hcp.HeadTracking.Domain;
+using Hcp.HeadTracking.Application;
 
-namespace Belen.HeadTracking.Infrastructure
+namespace Hcp.HeadTracking.Infrastructure
 {
     // Inspector-editable tuning + wiring for the HeadTracking context.
     // The Bootstrap reads this and injects plain data into the Application services.
-    [CreateAssetMenu(menuName = "Belen/HeadTracking Config", fileName = "HeadTrackingConfig")]
+    [CreateAssetMenu(menuName = "HCP/HeadTracking Config", fileName = "HeadTrackingConfig")]
     public class HeadTrackingConfig : ScriptableObject
     {
         [Header("Source")]

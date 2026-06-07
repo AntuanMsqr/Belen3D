@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Belen.HeadTracking.Domain
+namespace Hcp.HeadTracking.Domain
 {
     // Immutable snapshot of head pose in camera (tracking) coordinates.
     // Value-type math from UnityEngine is allowed in Domain; engine *services* are not.

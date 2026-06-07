@@ -1,0 +1,18 @@
+﻿<Solution>
+  <Project Path="Hcp.Presentation.Domain.csproj" />
+  <Project Path="Hcp.Narrative.Infrastructure.csproj" />
+  <Project Path="Hcp.Diagnostics.Infrastructure.csproj" />
+  <Project Path="Hcp.HeadTracking.Infrastructure.csproj" />
+  <Project Path="Hcp.HeadTracking.Domain.csproj" />
+  <Project Path="Assembly-CSharp-Editor.csproj" />
+  <Project Path="Hcp.HeadTracking.Application.csproj" />
+  <Project Path="Hcp.Architecture.Tests.csproj" />
+  <Project Path="Hcp.Narrative.Domain.csproj" />
+  <Project Path="Hcp.Presentation.Infrastructure.csproj" />
+  <Project Path="OpenSee.csproj" />
+  <Project Path="Assembly-CSharp.csproj" />
+  <Project Path="Hcp.Presentation.Application.csproj" />
+  <Project Path="Hcp.Composition.csproj" />
+  <Project Path="Hcp.Composition.Editor.csproj" />
+  <Project Path="Hcp.Narrative.Application.csproj" />
+</Solution>

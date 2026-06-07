@@ -1,7 +1,7 @@
 using UnityEngine;
-using Belen.HeadTracking.Domain;
+using Hcp.HeadTracking.Domain;
 
-namespace Belen.HeadTracking.Application
+namespace Hcp.HeadTracking.Application
 {
     // Orchestrates one frame of head tracking: pull -> process -> map -> CameraTarget.
     // Owns calibration state. Plain class (NOT a MonoBehaviour) — ticked by an Infrastructure View.

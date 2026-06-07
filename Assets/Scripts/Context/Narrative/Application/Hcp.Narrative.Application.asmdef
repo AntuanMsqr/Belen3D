@@ -1,0 +1,16 @@
+{
+    "name": "Hcp.Narrative.Application",
+    "rootNamespace": "Hcp.Narrative.Application",
+    "references": [
+        "Hcp.Narrative.Domain"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

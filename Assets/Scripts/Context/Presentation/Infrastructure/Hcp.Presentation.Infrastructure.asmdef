@@ -1,0 +1,18 @@
+{
+    "name": "Hcp.Presentation.Infrastructure",
+    "rootNamespace": "Hcp.Presentation.Infrastructure",
+    "references": [
+        "Hcp.Presentation.Domain",
+        "Hcp.Presentation.Application",
+        "Unity.InputSystem"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

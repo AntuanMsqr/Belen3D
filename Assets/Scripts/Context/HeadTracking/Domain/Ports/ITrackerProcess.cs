@@ -1,4 +1,4 @@
-namespace Belen.HeadTracking.Domain
+namespace Hcp.HeadTracking.Domain
 {
     // Port: the external face-tracker process (e.g. OpenSeeFace facetracker.exe).
     // Implemented in Infrastructure with System.Diagnostics.Process.

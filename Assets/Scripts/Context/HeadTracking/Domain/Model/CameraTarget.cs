@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Belen.HeadTracking.Domain
+namespace Hcp.HeadTracking.Domain
 {
     // Result of mapping a head pose to a camera placement, expressed as plain data.
     // The Application layer produces this; an Infrastructure View applies it to a Transform.

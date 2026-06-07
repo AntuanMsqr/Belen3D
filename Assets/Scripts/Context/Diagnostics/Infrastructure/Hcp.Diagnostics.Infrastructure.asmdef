@@ -1,0 +1,19 @@
+{
+    "name": "Hcp.Diagnostics.Infrastructure",
+    "rootNamespace": "Hcp.Diagnostics.Infrastructure",
+    "references": [
+        "Hcp.HeadTracking.Domain",
+        "Hcp.HeadTracking.Application",
+        "Hcp.HeadTracking.Infrastructure",
+        "Unity.InputSystem"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

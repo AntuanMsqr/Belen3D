@@ -1,0 +1,76 @@
+.spatial-root {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 280px;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.72);
+    border-radius: 6px;
+}
+
+.spatial-title {
+    color: rgb(120, 255, 140);
+    font-size: 15px;
+    -unity-font-style: bold;
+    margin-bottom: 6px;
+}
+
+.spatial-section {
+    color: rgb(180, 200, 255);
+    font-size: 12px;
+    -unity-font-style: bold;
+    margin-top: 8px;
+    margin-bottom: 2px;
+}
+
+.spatial-root Label {
+    color: rgb(235, 235, 235);
+}
+
+/* Field labels (FloatField / Vector3Field / DropdownField) */
+.spatial-root .unity-base-field__label {
+    color: rgb(235, 235, 235);
+    font-size: 12px;
+    min-width: 80px;
+}
+
+/* Field input boxes: light background + dark text for contrast */
+.spatial-root .unity-base-field__input,
+.spatial-root .unity-base-text-field__input {
+    color: rgb(20, 20, 20);
+    background-color: rgb(235, 235, 235);
+    border-radius: 3px;
+    border-width: 0;
+}
+
+/* Vector3 sub-field x/y/z labels */
+.spatial-root .unity-composite-field__field-spacer,
+.spatial-root .unity-vector3-field .unity-base-field__label {
+    color: rgb(235, 235, 235);
+    min-width: 12px;
+}
+
+/* Dropdown displayed text */
+.spatial-root .unity-base-popup-field__text {
+    color: rgb(20, 20, 20);
+}
+
+.spatial-row {
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.spatial-btn {
+    flex-grow: 1;
+    margin: 2px;
+    color: rgb(20, 20, 20);
+    -unity-font-style: bold;
+}
+
+.spatial-hint {
+    color: rgb(150, 150, 150);
+    font-size: 10px;
+    margin-top: 6px;
+    -unity-text-align: middle-center;
+}

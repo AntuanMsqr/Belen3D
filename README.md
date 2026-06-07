@@ -8,7 +8,7 @@ Requisitos
 
 Pasos (Demo con escena incluida)
 1) Abrir la escena de ejemplo en Unity:
-   - `Assets/Scenes/BelenTargetsParallaxSample.unity`
+   - `Assets/Scenes/HcpTargetsParallaxSample.unity`
 2) Ejecutar el tracker de cámara (OpenSeeFace) desde PowerShell/CMD en la raíz del repo:
    - `.
 Tools\OpenSeeFace\Binary\facetracker.exe -c 0 -v 3 -P 1`
@@ -19,7 +19,7 @@ Tools\OpenSeeFace\Binary\facetracker.exe -l 1`
 3) En Unity, presiona Play para ver el efecto HCP.
 
 Notas sobre el receptor en Unity (escenas incluidas)
-- Las escenas de muestra (p. ej., `Assets/Scenes/BelenTargetsParallaxSample.unity`) ya están configuradas para OpenSeeFace: incluyen un GameObject `OpenSeeReceiver` con los componentes `OpenSee.OpenSee` y `OpenSeeFaceBoxSource`.
+- Las escenas de muestra (p. ej., `Assets/Scenes/HcpTargetsParallaxSample.unity`) ya están configuradas para OpenSeeFace: incluyen un GameObject `OpenSeeReceiver` con los componentes `OpenSee.OpenSee` y `OpenSeeFaceBoxSource`.
 - Por ello, usa el tracker OpenSeeFace (`facetracker.exe` como arriba). No necesitas `UdpHeadPoseReceiver` para estas escenas.
 - Si deseas usar el receptor genérico JSON (`UdpHeadPoseReceiver`), cambia la fuente en tu escena y utiliza la alternativa “MediaPipe JSON” de abajo.
 

@@ -1,14 +1,14 @@
 using UnityEngine;
-using Belen.HeadTracking.Domain;
+using Hcp.HeadTracking.Domain;
 
-namespace Belen.HeadTracking.Infrastructure
+namespace Hcp.HeadTracking.Infrastructure
 {
     // ICalibrationStore backed by PlayerPrefs.
     // Keeps the legacy FaceTrackerManager prefix and key names so existing user
     // calibrations keep loading after the migration.
     public sealed class PlayerPrefsCalibrationStore : ICalibrationStore
     {
-        private const string Prefix = "Belen/FaceTracker/";
+        private const string Prefix = "HCP/FaceTracker/";
 
         public bool TryLoad(ref CalibrationData d)
         {

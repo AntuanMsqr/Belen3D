@@ -1,8 +1,8 @@
 using System;
 using UnityEngine;
-using Belen.Narrative.Application;
+using Hcp.Narrative.Application;
 
-namespace Belen.Narrative.Infrastructure
+namespace Hcp.Narrative.Infrastructure
 {
     // View: drives the tableau flow. Holds the scene roots + audio, pumps NarrativeService,
     // and on each scene change activates the right roots and crossfades the music.

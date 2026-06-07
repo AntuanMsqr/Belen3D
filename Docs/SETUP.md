@@ -45,10 +45,10 @@ Folder Map
 
 4) Scene Flow (5 Tableaux)
 - Create five root GameObjects: `Anunciacion`, `CaminoABelen`, `Nacimiento`, `AnuncioPastores`, `AdoracionReyes`.
-- Add `BelenSceneController` to an empty `SceneFlow` object.
+- Add `HcpSceneController` to an empty `SceneFlow` object.
   - For each array element `scenes[i]`, set:
     - `name` (optional), `duration` (20–25s), `music` (looping clip), `roots` (list containing the corresponding root GameObject).
-- Add `AudioCrossfader` to an Audio object and link to `BelenSceneController.crossfader`.
+- Add `AudioCrossfader` to an Audio object and link to `HcpSceneController.crossfader`.
 
 5) Tracking Input (UDP)
 - The receiver accepts either JSON or CSV per datagram:

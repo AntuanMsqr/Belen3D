@@ -1,4 +1,4 @@
-namespace Belen.HeadTracking.Domain
+namespace Hcp.HeadTracking.Domain
 {
     // How head motion maps to the camera rig.
     public enum MotionMode

@@ -1,8 +1,8 @@
 using UnityEngine;
-using Belen.HeadTracking.Domain;
-using Belen.HeadTracking.Application;
+using Hcp.HeadTracking.Domain;
+using Hcp.HeadTracking.Application;
 
-namespace Belen.HeadTracking.Infrastructure
+namespace Hcp.HeadTracking.Infrastructure
 {
     // The single per-frame View for head tracking: pumps the controller's Tick and applies
     // the resulting CameraTarget to the camera pivot Transform. The Application layer never

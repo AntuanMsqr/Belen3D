@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Belen.Narrative.Domain
+namespace Hcp.Narrative.Domain
 {
     // Pure tableau timeline: cycles through N scenes by duration. No engine services.
     public sealed class SceneTimeline

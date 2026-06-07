@@ -4,9 +4,9 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using UnityEngine;
-using Belen.HeadTracking.Domain;
+using Hcp.HeadTracking.Domain;
 
-namespace Belen.HeadTracking.Infrastructure
+namespace Hcp.HeadTracking.Infrastructure
 {
     // Receives a 2D face rectangle over UDP and maps it to head pose without rotation.
     // JSON: {"cx":0..1,"cy":0..1,"size":0..1}  |  CSV: cx,cy,size

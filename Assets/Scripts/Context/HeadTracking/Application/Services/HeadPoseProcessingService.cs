@@ -1,6 +1,6 @@
-using Belen.HeadTracking.Domain;
+using Hcp.HeadTracking.Domain;
 
-namespace Belen.HeadTracking.Application
+namespace Hcp.HeadTracking.Application
 {
     // Filters a raw head pose and updates neutral calibration.
     public sealed class HeadPoseProcessingService

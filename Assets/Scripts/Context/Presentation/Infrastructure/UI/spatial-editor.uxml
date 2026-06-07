@@ -1,0 +1,35 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <Style src="spatial-editor.uss" />
+    <ui:VisualElement name="spatial-root" class="spatial-root">
+        <ui:Label text="Editor espacial — HCP" class="spatial-title" />
+
+        <ui:Label text="Sel: —" name="label-selection" class="spatial-section" />
+        <ui:VisualElement class="spatial-row">
+            <ui:Button text="Mover" name="btn-move" class="spatial-btn" />
+            <ui:Button text="Rotar" name="btn-rotate" class="spatial-btn" />
+            <ui:Button text="Escalar" name="btn-scale" class="spatial-btn" />
+        </ui:VisualElement>
+
+        <ui:Label text="Monitor" class="spatial-section" />
+        <ui:FloatField label="Ancho (m)" name="field-width" />
+        <ui:FloatField label="Alto (m)" name="field-height" />
+        <ui:Vector3Field label="Posición" name="field-mon-pos" />
+        <ui:Vector3Field label="Rotación" name="field-mon-rot" />
+
+        <ui:Label text="Cámara" class="spatial-section" />
+        <ui:DropdownField label="Activa" name="field-cam-index" />
+        <ui:Vector3Field label="Offset pos." name="field-cam-pos" />
+        <ui:Vector3Field label="Offset rot." name="field-cam-rot" />
+        <ui:Button text="+ Añadir cámara" name="btn-add-cam" class="spatial-btn" />
+
+        <ui:Label text="Usuario" class="spatial-section" />
+        <ui:Vector3Field label="Posición ref." name="field-user-pos" />
+        <ui:FloatField label="Distancia (m)" name="field-user-dist" />
+
+        <ui:VisualElement name="spatial-row" class="spatial-row">
+            <ui:Button text="Guardar" name="btn-save" class="spatial-btn" />
+            <ui:Button text="Reset" name="btn-reset" class="spatial-btn" />
+        </ui:VisualElement>
+        <ui:Label text="Click=seleccionar · click vacío=deselec · arrastra gizmos · W/E/R modo · F2 ocultar · Esc menú" class="spatial-hint" />
+    </ui:VisualElement>
+</ui:UXML>

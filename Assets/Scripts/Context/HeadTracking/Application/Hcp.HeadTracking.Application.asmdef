@@ -1,0 +1,16 @@
+{
+    "name": "Hcp.HeadTracking.Application",
+    "rootNamespace": "Hcp.HeadTracking.Application",
+    "references": [
+        "Hcp.HeadTracking.Domain"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,8 +1,8 @@
 using System;
 using UnityEngine;
-using Belen.HeadTracking.Domain;
+using Hcp.HeadTracking.Domain;
 
-namespace Belen.HeadTracking.Infrastructure
+namespace Hcp.HeadTracking.Infrastructure
 {
     // Presence detection View: considers a user present if pose updates arrive within a timeout.
     // Wired by the Bootstrap via Initialize(); exposes plain C# events for other contexts.

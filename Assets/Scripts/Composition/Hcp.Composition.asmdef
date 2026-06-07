@@ -1,0 +1,23 @@
+{
+    "name": "Hcp.Composition",
+    "rootNamespace": "Hcp.Composition",
+    "references": [
+        "Hcp.HeadTracking.Domain",
+        "Hcp.HeadTracking.Application",
+        "Hcp.HeadTracking.Infrastructure",
+        "Hcp.Presentation.Domain",
+        "Hcp.Presentation.Application",
+        "Hcp.Presentation.Infrastructure",
+        "Hcp.Diagnostics.Infrastructure",
+        "OpenSee"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

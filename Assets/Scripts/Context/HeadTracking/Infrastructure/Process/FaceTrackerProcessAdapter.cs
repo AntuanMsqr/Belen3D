@@ -2,10 +2,10 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using UnityEngine;
-using Belen.HeadTracking.Domain;
+using Hcp.HeadTracking.Domain;
 using Debug = UnityEngine.Debug;
 
-namespace Belen.HeadTracking.Infrastructure
+namespace Hcp.HeadTracking.Infrastructure
 {
     // Launches and stops the external OpenSeeFace tracker (facetracker.exe) via System.Diagnostics.Process.
     // The exe is a PyInstaller bundle: it MUST run with its own folder as WorkingDirectory so the

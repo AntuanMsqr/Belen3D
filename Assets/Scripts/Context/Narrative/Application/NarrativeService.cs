@@ -1,6 +1,6 @@
-using Belen.Narrative.Domain;
+using Hcp.Narrative.Domain;
 
-namespace Belen.Narrative.Application
+namespace Hcp.Narrative.Application
 {
     // Advances the tableau timeline. Plain class; ticked by a View.
     public sealed class NarrativeService

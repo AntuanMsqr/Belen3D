@@ -1,0 +1,19 @@
+{
+    "name": "Hcp.Narrative.Infrastructure",
+    "rootNamespace": "Hcp.Narrative.Infrastructure",
+    "references": [
+        "Hcp.Narrative.Domain",
+        "Hcp.Narrative.Application",
+        "Hcp.HeadTracking.Domain",
+        "Hcp.HeadTracking.Infrastructure"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,9 +1,9 @@
 using UnityEngine;
 using UnityEngine.UIElements;
-using Belen.Narrative.Domain;
-using Belen.HeadTracking.Infrastructure;
+using Hcp.Narrative.Domain;
+using Hcp.HeadTracking.Infrastructure;
 
-namespace Belen.Narrative.Infrastructure
+namespace Hcp.Narrative.Infrastructure
 {
     // UI Toolkit View: fades an idle prompt in/out based on presence.
     // Shows when absent, hides when a user is present.

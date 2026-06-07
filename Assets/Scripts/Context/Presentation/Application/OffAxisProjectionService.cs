@@ -1,7 +1,7 @@
 using UnityEngine;
-using Belen.Presentation.Domain;
+using Hcp.Presentation.Domain;
 
-namespace Belen.Presentation.Application
+namespace Hcp.Presentation.Application
 {
     // Use case: produce off-axis matrices for a given eye + screen plane.
     public sealed class OffAxisProjectionService

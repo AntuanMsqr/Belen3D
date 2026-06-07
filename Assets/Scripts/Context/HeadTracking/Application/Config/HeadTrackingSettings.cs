@@ -1,6 +1,6 @@
-using Belen.HeadTracking.Domain;
+using Hcp.HeadTracking.Domain;
 
-namespace Belen.HeadTracking.Application
+namespace Hcp.HeadTracking.Application
 {
     // Which head-pose source the rig should use.
     public enum SourceKind
