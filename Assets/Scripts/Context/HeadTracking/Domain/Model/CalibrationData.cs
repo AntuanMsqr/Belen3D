@@ -66,7 +66,7 @@ namespace Hcp.HeadTracking.Domain
 
                 useDistanceGain = false,
                 neutralZ = 0.6f,
-                distanceGain = 1.0f,
+                distanceGain = 5.0f,
                 zClamp = new Vector2(0.2f, 2.0f),
 
                 autoNeutral = false,

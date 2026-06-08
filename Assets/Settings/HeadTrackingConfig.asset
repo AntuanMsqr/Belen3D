@@ -31,7 +31,7 @@ MonoBehaviour:
   rotationAlpha: 0.12
   useDistanceGain: 0
   neutralZ: 0.6
-  distanceGain: 1
+  distanceGain: 6
   zClamp: {x: 0.2, y: 2}
   autoNeutral: 0
   autoNeutralDuration: 2

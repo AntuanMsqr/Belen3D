@@ -44,9 +44,11 @@ namespace Hcp.HeadTracking.Infrastructure
         [Range(0f, 1f)] public float rotationAlpha = 0.2f;
 
         [Header("Distance response (Direct)")]
+        [Tooltip("Clamp the dolly to zClamp. Off = unclamped (dolly still applies).")]
         public bool useDistanceGain = false;
         public float neutralZ = 0.6f;
-        public float distanceGain = 1.0f;
+        [Tooltip("Camera dolly meters per meter of head depth. Always applied. Raise >1 for a stronger acercarse/alejarse.")]
+        public float distanceGain = 5.0f;
         public Vector2 zClamp = new Vector2(0.2f, 2.0f);
 
         [Header("Neutral learning")]

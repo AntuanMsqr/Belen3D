@@ -35,8 +35,12 @@ namespace Hcp.HeadTracking.Application
             // shifts it by the delta from neutral, so the camera moves like the viewer's real head.
             var neutralPos = new Vector3(cal.neutralXY.x, cal.neutralXY.y, cal.neutralZ);
             var delta = pose.position - neutralPos;
+            // Dolly: head depth always moves the camera toward/away from the screen, scaled by
+            // distanceGain (raise it for a stronger acercarse/alejarse). useDistanceGain only gates
+            // the optional clamp so the dolly never overshoots a configured range.
+            delta.z *= cal.distanceGain;
             if (cal.useDistanceGain)
-                delta.z = Mathf.Clamp(delta.z * cal.distanceGain, cal.zClamp.x - 1f, cal.zClamp.y);
+                delta.z = Mathf.Clamp(delta.z, cal.zClamp.x - 1f, cal.zClamp.y);
             var pos = cal.positionOffset + delta;
 
             // Base orientation (rotationOffset, e.g. look toward the scene) + head rotation delta.
