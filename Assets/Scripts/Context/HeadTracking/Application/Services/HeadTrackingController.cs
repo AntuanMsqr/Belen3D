@@ -58,7 +58,7 @@ namespace Hcp.HeadTracking.Application
             target = default;
             if (!source.TryGetLatest(out var raw)) return false;
 
-            var filtered = processing.Process(raw, ref cal);
+            var filtered = processing.Process(raw, ref cal, deltaTime);
             LastFilteredPosition = filtered.position;
             LastFilteredEuler = filtered.eulerDegrees;
 

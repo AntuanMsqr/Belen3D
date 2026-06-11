@@ -20,13 +20,13 @@ namespace Hcp.HeadTracking.Application
             neutral.Reset();
         }
 
-        public HeadPose Process(in HeadPose raw, ref CalibrationData cal)
+        public HeadPose Process(in HeadPose raw, ref CalibrationData cal, float deltaTime)
         {
             // Keep the filter in sync with persisted/edited alphas.
             this.filter.positionAlpha = cal.positionAlpha;
             this.filter.rotationAlpha = cal.rotationAlpha;
 
-            var filtered = this.filter.Filter(raw);
+            var filtered = this.filter.Filter(raw, deltaTime);
             neutral.Process(filtered, ref cal);
             return filtered;
         }
